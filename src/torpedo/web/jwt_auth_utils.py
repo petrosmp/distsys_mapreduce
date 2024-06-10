@@ -2,11 +2,13 @@ from collections.abc import Callable
 from functools import wraps
 from http import HTTPStatus
 from typing import Any, ParamSpec  # noqa: TYP001
-from src.torpedo.repository import Repository
+
 import jwt
 from flask import current_app, request
 from injector import inject
+
 from src.torpedo.errors import AuthException, TorpedoException
+from src.torpedo.repository import Repository
 
 
 def get_token_from_auth_header() -> str:
@@ -30,6 +32,7 @@ def get_token_from_auth_header() -> str:
 
 P = ParamSpec("P")  # allows us to do this https://typing.readthedocs.io/en/latest/spec/generics.html#id4
 
+
 def requires_auth(f: Callable[P, Any]) -> Callable[P, Any]:
     """Determines if the Access Token is valid"""
 
@@ -47,7 +50,7 @@ def requires_auth(f: Callable[P, Any]) -> Callable[P, Any]:
         # also check that the token is in the DB (and thus the user hasn't logged out, invalidating the token)
         try:
             valid = repository.token_is_valid(token)
-        except Exception as e:
+        except Exception:
             raise TorpedoException("unexpected DB error", HTTPStatus.INTERNAL_SERVER_ERROR)
 
         if not valid:
