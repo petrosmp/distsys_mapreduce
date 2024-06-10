@@ -30,7 +30,7 @@ services:
       - POSTGRES_HOST=db
       - POSTGRES_DB=local_db
       - SECRET_KEY=supersecretkey
-    volumes:
-      - ./migrations:/app/migrations
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+        restart: true
