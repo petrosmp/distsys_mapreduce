@@ -29,7 +29,7 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_HOST=db
       - POSTGRES_DB=local_db
-      - SECRET_KEY
+      - SECRET_KEY=supersecretkey
     volumes:
       - ./migrations:/app/migrations
     depends_on:
