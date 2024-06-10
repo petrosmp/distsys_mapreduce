@@ -1,0 +1,19 @@
+# web requirements
+Flask==3.0.0
+flask_injector==0.15.0
+injector==0.21.0
+gunicorn==22.0.0
+Werkzeug==3.0.3
+requests==2.32.3
+setuptools==70.0.0
+pytz==2024.1
+PyJWT==2.8.0
+
+# database requirements
+SQLAlchemy==2.0.30
+psycopg==3.1.19
+alembic==1.13.1
+
+# dev requirements
+tox==4.15.1
+pytest==8.2.2
