@@ -37,6 +37,7 @@ def login(repository: Repository) -> Any:
 
 @auth.route("/logout", methods=["POST"])
 @requires_auth
+@inject
 def logout(repository: Repository):
     """Log the currently logged in user out (i.e. invalidate their token)."""
     token = get_token_from_auth_header()
