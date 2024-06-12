@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: flas_test_pod
+  namespace: torpili
+spec:
+  containers:
+  - name: flask_test_pod
+    image: flask_test_2:latest
+    ports:
+      - containerPort: 5000
+
+
+# kubectl apply -f <file_name> 
+# kubectl exec -it ubuntu-pod /bin/bash (DEPRECATED, see note)
+#   df to see filesystem info
+#   /etc/hosts has <ip> <name> pairs (pre DNS)
+#   overlay type filesystem?
+#   no persistent storage
+#     -> volumes
+
