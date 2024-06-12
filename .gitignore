@@ -8,3 +8,6 @@ format/
 lint/
 notes*
 .tmp/
+src/torpedo/.DS_Store
+src/.DS_Store
+.DS_Store
