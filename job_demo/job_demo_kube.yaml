@@ -6,9 +6,9 @@ metadata:
 spec:
   containers:
   - name: flask-test-container
-    image: georgestav/test
+    image: petemp/okeanos_test:2
     ports:
-      - containerPort: 5001
+      - containerPort: 8000
 
 
 # kubectl apply -f <file_name> 
