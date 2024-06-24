@@ -3,6 +3,7 @@ from functools import wraps
 from http import HTTPStatus
 from typing import Any, ParamSpec  # noqa: TYP001
 
+import flask_injector
 import jwt
 from flask import current_app, request
 from injector import inject
@@ -33,6 +34,7 @@ def get_token_from_auth_header() -> str:
 P = ParamSpec("P")  # allows us to do this https://typing.readthedocs.io/en/latest/spec/generics.html#id4
 
 
+@inject
 def requires_auth(f: Callable[P, Any]) -> Callable[P, Any]:
     """Determines if the Access Token is valid"""
 
@@ -56,7 +58,9 @@ def requires_auth(f: Callable[P, Any]) -> Callable[P, Any]:
         if not valid:
             raise AuthException("token has been invalidated", HTTPStatus.UNAUTHORIZED)
 
-        return f(*args, **kwargs)
+        from src.torpedo.web.module import TorpedoModule
+
+        return flask_injector.Injector(modules=[TorpedoModule]).call_with_injection(f, *args, **kwargs)
 
     return decorated
 
