@@ -13,3 +13,7 @@ spec:
       targetPort: 8000
 
 # 1:20:00 sto recording leei pws na to kaneis access sto evrytero internet
+# gia kapoio logo, enw to pod mporei na ginei access me 
+#   kubectl port-forward pod/flask-test-pod 8000:8000
+# to service den mporei na ginei, kai vgazei error
+#   error: timed out waiting for the condition
