@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-deployment
+spec:
+  replicas: 1 # db is not replicated - could it be?
+  template: # describing the pod that will be created
+    metadata:
+      labels:
+        app: db  # both key and value arbitrary
+    spec:
+      containers:
+        - name: db   # arbitrary 
+          image: postgres:latest
+          env:
+            - name: POSTGRES_DB
+              value: local_db
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+          resources:
+            limits:
+              memory: 1Gi # describes the maximum amount of compute resources allowed
+              cpu: "1"
+            requests: #  describes the minimum amount of compute resources required
+              memory: 512Mi
+              cpu: "0.2"  # https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/#cpu-units
+          ports:
+            - containerPort: 5432
+  selector:
+    matchLabels:
+      app: db    # has to match the template ones above
+
+
+# DEPLOYMENTS CAN MANAGE MULTIPLE PODS, BUT ONLY ONE KIND OF POD
