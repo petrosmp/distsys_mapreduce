@@ -4,7 +4,6 @@ metadata:
   name: flask-test-service
   namespace: torpili
 spec:
-  type: NodePort
   selector:
     app: flask-test-deployment
   ports:
@@ -17,3 +16,5 @@ spec:
 #   kubectl port-forward pod/flask-test-pod 8000:8000
 # to service den mporei na ginei, kai vgazei error
 #   error: timed out waiting for the condition
+#
+# FIX: create a deployment and make the service point to it.
