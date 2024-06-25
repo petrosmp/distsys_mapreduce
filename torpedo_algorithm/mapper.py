@@ -14,7 +14,7 @@ class Mapper:
         self.id = id
         self.filename = f"mapper_{self.id}.py"
         # Keep track of the appearance of the possible alphanumeric characters as first characters
-        self.first_alphanumeric_appearance = [False] * (NUMBER_OF_LETTERS + NUMBER_OF_DIGITS)
+        self.first_alphanumeric_appearance = [False] * (self.NUMBER_OF_LETTERS + self.NUMBER_OF_DIGITS)
 
     # Literally us
     def keep_appearances(self, char: str):
