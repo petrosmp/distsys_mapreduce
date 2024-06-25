@@ -35,7 +35,7 @@ class Mapper:
         """
         words = self.WHITESPACE_RE.findall(chunk)
         for word in words:
-            self._update_first_char_bool_array(word[0])
+            self.keep_appearances(word[0])
             self.intermediate.append((word, 1))
         return self.intermediate
 
