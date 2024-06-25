@@ -23,7 +23,7 @@ services:
     container_name: web
     build: .
     ports:
-      - "80:80"
+      - "7777:80"
     environment:
       - POSTGRES_USERNAME=postgres
       - POSTGRES_PASSWORD=postgres

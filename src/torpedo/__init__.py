@@ -16,7 +16,7 @@ def create_app() -> Flask:
     alembic.config.main(argv=["--raiseerr", "upgrade", "head"])  # --raiserr raises stacktrace
 
     flask_app = Flask(__name__)
-    CORS(flask_app)
+    CORS(flask_app, supports_credentials=True)
     flask_app.config.from_object(Config)
 
     flask_app.register_blueprint(healthchecks.health)

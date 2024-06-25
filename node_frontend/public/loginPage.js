@@ -49,7 +49,7 @@ const register = async () => {
     const roles = ['admin', 'manage_users']; // Example roles, adjust as necessary
 
     // Make a POST request to the backend register endpoint
-    const response = await fetch('https://localhost/register', {
+    const response = await fetch('http://localhost:7777/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -71,7 +71,7 @@ const login = async () => {
     const password = document.getElementById('login-password').value;
 
     // Make a POST request to the backend login endpoint
-    const response = await fetch('https://localhost/auth/login', {
+    const response = await fetch('http://localhost:7777/auth/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -98,7 +98,7 @@ const logout = async () => {
     const token = localStorage.getItem('access_token');
 
     // Make a POST request to the backend logout endpoint
-    const response = await fetch('https://localhost/auth/logout', {
+    const response = await fetch('http://localhost:7777/auth/logout', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -120,6 +120,6 @@ const logout = async () => {
     }
 }
 // // Add event listeners to the buttons
-// document.getElementById('register-button').addEventListener('click', register);
-// document.getElementById('login-button').addEventListener('click', login);
-// document.getElementById('logout-button').addEventListener('click', logout);
+document.getElementById('register-button').addEventListener('click', register);
+document.getElementById('login-button').addEventListener('click', login);
+document.getElementById('logout-button').addEventListener('click', logout);
