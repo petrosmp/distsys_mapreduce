@@ -1,0 +1,16 @@
+{
+  "name": "nodejs-frontend",
+  "version": "1.0.0",
+  "description": "nodejs authorization web UI",
+  "author": "Ioannis Christofilogiannis <jchr2001@gmail.com>",
+  "license": "TUC",
+  "main": "app.js",
+  "keywords": [
+    "nodejs",
+    "bootstrap",
+    "express"
+  ],
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
