@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: longhorn-deployment
+  namespace: torpili
+spec:
+  replicas: 3  # Number of replicas
+  selector:
+    matchLabels:
+      app: longhorn-app
+  template:
+    metadata:
+      labels:
+        app: longhorn-app
+    spec:
+      containers:
+      - name: longhorn-container
+        image: nginx
+        volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: longhorn-storage
+      volumes:
+      - name: longhorn-storage
+        persistentVolumeClaim:
+          claimName: longhorn-pvc
