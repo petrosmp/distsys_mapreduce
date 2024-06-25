@@ -7,28 +7,28 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <div class="welcome">
-            <h1>Welcome</h1>
-            <button id="register-button" onclick="showRegister()">Register</button>
-            <button id="login-button" onclick="showLogin()">Login</button>
-            <button id="logout-button" onclick="">Logout</button>
-        </div>
-        <div id="register-view" class="auth-view hidden">
-            <h2>Register</h2>
-            <input type="text" id="reg-username" placeholder="Username">
-            <input type="password" id="reg-password" placeholder="Password">
-            <button id="register-button" onclick="register()">Register</button>
-            <button id="welcome-button" onclick="showWelcome()">Back</button>
-        </div>
-        <div id="login-view" class="auth-view hidden">
-            <h2>Login</h2>
-            <input type="text" id="login-username" placeholder="Username">
-            <input type="password" id="login-password" placeholder="Password">
-            <button id="login-button" onclick="login()">Login</button>
-            <button id="welcome-button" onclick="showWelcome()">Back</button>
-        </div>
+<div class="container">
+    <div class="welcome">
+        <h1 id="welcome_username">Welcome </h1>
+        <button id="show-register-button" onclick="showRegister()">Register</button>
+        <button id="show-login-button" onclick="showLogin()">Login</button>
+        <button id="logout-button">Logout</button>
     </div>
-    <script src="loginPage.js"></script>
+    <div id="register-view" class="auth-view hidden">
+        <h2>Register</h2>
+        <input type="text" id="reg-username" placeholder="Username">
+        <input type="password" id="reg-password" placeholder="Password">
+        <button id="register-button">Register</button>
+        <button id="back-button" onclick="showWelcome()">Back</button>
+    </div>
+    <div id="login-view" class="auth-view hidden">
+        <h2>Login</h2>
+        <input type="text" id="login-username" placeholder="Username">
+        <input type="password" id="login-password" placeholder="Password">
+        <button id="login-button">Login</button>
+        <button id="back-button" onclick="showWelcome()">Back</button>
+    </div>
+</div>
+<script src="loginPage.js"></script>
 </body>
 </html>
