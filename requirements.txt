@@ -8,6 +8,7 @@ requests==2.32.3
 setuptools==70.0.0
 pytz==2024.1
 PyJWT==2.8.0
+Flask-Cors==4.0.1
 
 # database requirements
 SQLAlchemy==2.0.30
