@@ -9,9 +9,6 @@ class Reducer:
         """
         Reduces the combined data to get the final word counts.
 
-        Args:
-        combined_data_list (list): A list of dictionaries with combined word counts.
-
         Returns:
         dict: A dictionary with the final word counts.
         """

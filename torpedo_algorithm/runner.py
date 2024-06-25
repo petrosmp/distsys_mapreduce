@@ -72,21 +72,5 @@ if __name__ == "__main__":
 
     print("Final word counts:", final_counts)
 
-    # Create the groups for the alphabet
-    alphabet_groups = {}
-    for letter in string.ascii_letters:
-        key = letter.lower()
-        if key not in alphabet_groups:
-            alphabet_groups[key] = set()
-        alphabet_groups[key].add(letter)
-
-    # Create a separate group for special characters
-    special_characters = set(string.punctuation + string.digits + string.whitespace)
-
-    # Display the groups
-    for key, group in alphabet_groups.items():
-        print(f"Group for '{key.upper()}/{key.lower()}': {group}")
-
-    print(f"Special characters group: {special_characters}")
 
 
