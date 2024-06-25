@@ -3,20 +3,11 @@ text = ("we are avid fans of PyPy and commensurately thankful for the great work
         "would have supported, and its smooth integration with C/C++ through CFFI has helped us attain a "
         "better tradeoff between performance and programmer productivity in our projects")
 
+import string
 from combiner import Combiner
 from mapper import Mapper
 from splitter import Splitter
 from reducer import Reducer
-
-
-def save_mapper_data(id: int, group_id: int, mapper_output_data: list, filename: str) -> None:
-    """
-    Save mapper data to a temporary file
-    """
-    with open(filename, 'w') as file:
-        file.write(f"group_id = {group_id}\n")
-        file.write(f"mapper_{id}_output = ")
-        file.write(repr(mapper_output_data))
 
 
 def distribute_combined_data(combined_data_list: list, num_reducers: int) -> list:
@@ -80,4 +71,22 @@ if __name__ == "__main__":
     final_counts = final_reducer.reduce(reduced_data_list)
 
     print("Final word counts:", final_counts)
+
+    # Create the groups for the alphabet
+    alphabet_groups = {}
+    for letter in string.ascii_letters:
+        key = letter.lower()
+        if key not in alphabet_groups:
+            alphabet_groups[key] = set()
+        alphabet_groups[key].add(letter)
+
+    # Create a separate group for special characters
+    special_characters = set(string.punctuation + string.digits + string.whitespace)
+
+    # Display the groups
+    for key, group in alphabet_groups.items():
+        print(f"Group for '{key.upper()}/{key.lower()}': {group}")
+
+    print(f"Special characters group: {special_characters}")
+
 

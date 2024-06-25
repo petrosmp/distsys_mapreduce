@@ -1,3 +1,6 @@
+// const cors = require("cors");
+// app.use(cors());
+
 // Helper functions to show or hide a view
 function hideView(element) {
     element.classList.add('hidden');
@@ -43,9 +46,10 @@ const register = async () => {
     // Get the username and password values from the input fields
     const username = document.getElementById('reg-username').value;
     const password = document.getElementById('reg-password').value;
+    const roles = ['admin', 'manage_users']; // Example roles, adjust as necessary
 
     // Make a POST request to the backend register endpoint
-    const response = await fetch('http://localhost:5000/auth/register', {
+    const response = await fetch('https://localhost/register', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -67,7 +71,7 @@ const login = async () => {
     const password = document.getElementById('login-password').value;
 
     // Make a POST request to the backend login endpoint
-    const response = await fetch('http://localhost:5000/auth/login', {
+    const response = await fetch('https://localhost/auth/login', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -94,7 +98,7 @@ const logout = async () => {
     const token = localStorage.getItem('access_token');
 
     // Make a POST request to the backend logout endpoint
-    const response = await fetch('http://localhost:5000/auth/logout', {
+    const response = await fetch('https://localhost/auth/logout', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -115,8 +119,7 @@ const logout = async () => {
         alert(data.message);
     }
 }
-
-// Add event listeners to the buttons
-document.getElementById('register-button').addEventListener('click', register);
-document.getElementById('login-button').addEventListener('click', login);
-document.getElementById('logout-button').addEventListener('click', logout);
+// // Add event listeners to the buttons
+// document.getElementById('register-button').addEventListener('click', register);
+// document.getElementById('login-button').addEventListener('click', login);
+// document.getElementById('logout-button').addEventListener('click', logout);
