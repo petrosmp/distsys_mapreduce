@@ -2,6 +2,7 @@ import logging
 from http import HTTPStatus
 
 from flask import Blueprint, jsonify, request
+from injector import inject
 from sqlalchemy.exc import IntegrityError
 
 from src.torpedo.errors import TorpedoException
@@ -22,6 +23,7 @@ def home_page():
 
 
 @home.route("/register", methods=["POST"])
+@inject
 def create_user(repository: Repository):
     """Create a new user with the given username, password and roles."""
     username = request.json["username"]
