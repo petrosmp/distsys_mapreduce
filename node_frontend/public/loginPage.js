@@ -138,6 +138,7 @@ const logout = async () => {
 
     // If the logout is successful, remove the token from local storage
     if (response.status === 200) {
+        updateWelcomeMessage(" ");
         alert('Logout successful');
         localStorage.removeItem('access_token');
         showWelcome();

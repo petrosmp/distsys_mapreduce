@@ -25,12 +25,12 @@ if __name__ == "__main__":
     splits = splitter.split()
     print(splits)
     # Initialize Mapper instances
-    mappers = [Mapper() for _ in range(len(splits))]
+    mappers = [Mapper(i) for i in range(len(splits))]
 
     # Apply map function to each split
     mapped_data_list = []
     for i in splits:
-        mapper = Mapper()
+        mapper = Mapper(i)
         mappers.append(mapper)
         # print(splits[i])
         mapped_data = mapper.map(splits[i])
