@@ -1,43 +1,35 @@
-import logging
 from http import HTTPStatus
 
 from flask import Blueprint, jsonify, request
 from injector import inject
-from kubernetes.client import AppsV1Api, CoreV1Api
-from kubernetes.client.models import V1Pod
-from kubernetes.client.rest import ApiException
-from sqlalchemy.exc import IntegrityError
+from kubernetes.client import AppsV1Api
 
-from kubernetes import client, config
 from src.torpedo.errors import TorpedoException
 from src.torpedo.models import Role
-from src.torpedo.repository import Repository
-from src.torpedo.web.jwt_auth_utils import (
-    get_username_and_roles_from_token,
-    required_role_is_present,
-    requires_auth,
-)
+from src.torpedo.web.jwt_auth_utils import required_role_is_present, requires_auth
 
 NAMESPACE = "torpili"
 
-jobs = Blueprint("jobs", __name__, url_prefix="jobs")
+jobs = Blueprint("jobs", __name__)
 
 
-@jobs.route("/", methods=["GET"])
+@jobs.route("/jobs", methods=["GET"])
 @requires_auth
 def list_jobs():
     # there should be some way in which we know which jobs are currently ongoing (see the TODO in the master script)
     return jsonify({"status": "ok", "message": "this is not implemented yet"})
 
 
-@jobs.route("/", methods=["POST"])
+@jobs.route("/submit_job", methods=["POST"])
 @inject
 @requires_auth
 def submit_job(apps_api: AppsV1Api):
     """Submit a new job for execution on the cluster"""
 
     if not required_role_is_present(Role.SUBMIT_JOBS):
-        raise TorpedoException(f"You are not authorized to submit jobs (no '{Role.SUBMIT_JOBS}' role)", 401)
+        raise TorpedoException(
+            f"You are not authorized to submit jobs (no '{Role.SUBMIT_JOBS}' role)", HTTPStatus.UNAUTHORIZED
+        )
 
     num_mappers = request.json["num_mappers"]
     num_reducers = request.json["num_reducers"]
@@ -74,6 +66,6 @@ def submit_job(apps_api: AppsV1Api):
 
         apps_api.create_namespaced_deployment(NAMESPACE, master_deployment_manifest)
     except Exception as e:
-        raise TorpedoException(f"error while creating master deployment: {e}", 500)
+        raise TorpedoException(f"error while creating master deployment: {e}", HTTPStatus.INTERNAL_SERVER_ERROR)
 
     return jsonify({"status": "ok", "message": f"job submitted successfully"})
