@@ -1,4 +1,5 @@
 from collections import defaultdict
+import sys
 
 
 class Splitter:
@@ -41,16 +42,19 @@ class Splitter:
 
     def write_files(self, splits: dict):
         for i, split in enumerate(splits):  # Using enumerate to get index i
-            with open(f"split{i}.txt", 'w') as file:
+            with open(f"/mnt/longhorn/split{i}.txt", 'w') as file:
                 file.write(splits[split])
 
 if __name__ == "__main__":
-    text = ("we are avid we fans of PyPy and commensurately thankful for the great work by the PyPy team over "
-            "the years. PyPy has enabled us to use Python for a larger part of our toolset than CPython alone "
-            "would have supported, and its smooth integration with C/C++ through CFFI has helped us attain a "
-            "better tradeoff between performance and programmer productivity in our projects")
+
+    #the text to split
+    text = sys.argv[1]
+    
+    #num of chucnks to split to
+    split_num = int(sys.argv[2])
 
     # mappers = [Mapper(i) for i in range(len(splits))]
-    splitter = Splitter(text, 10)
+    splitter = Splitter(text, split_num)
     splits = splitter.split()
     print(splits)
+ 
