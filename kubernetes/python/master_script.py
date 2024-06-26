@@ -1,7 +1,6 @@
 from kubernetes import client, config
 from kubernetes.client.rest import ApiException
 from kubernetes.client.models import V1Pod
-import os
 
 NAMESPACE = "torpili"
 NUM_SPLITTERS = 1
@@ -162,19 +161,36 @@ def create_pods():
 
         splitters: list[V1Pod] = core_api.list_namespaced_pod(NAMESPACE, label_selector="app=splitter").items
 
-        split_done = False
+        # loop untill all splitters have completed
+        i = 0
+        while True:
+            while i < len(splitters):
+                if splitters[i].status.phase == "Completed":
+                    splitters.pop(i)
+                    i += 1
+                    break
+            break
 
-        while not split_done:
-            for i in splitters:
-                if i: break
+        # TODO: could write to a file here (and after each stage) so that if the master is killed, the execution
+        # is picked up where it was left of
 
         # create mappers
         core_api.create_namespaced_service(NAMESPACE, splitter_service_manifest)
         apps_api.create_namespaced_stateful_set(NAMESPACE, splitter_statefulset_manifest)
         
+        mappers: list[V1Pod] = core_api.list_namespaced_pod(NAMESPACE, label_selector="app=mapper").items
 
+        # loop untill all mappers have completed
+        i = 0
+        while True:
+            while i < len(mappers):
+                if mappers[i].status.phase == "Completed":
+                    mappers.pop(i)
+                    i += 1
+                    break
+            break
 
-        print("SplitterStatefulSet created successfully")
+        print("Split & Map completed successfully")
     except ApiException as e:
         print(f"Exception when creating pod: {e}")
 
