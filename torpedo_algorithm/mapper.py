@@ -1,4 +1,5 @@
 import re
+import sys
 
 
 class Mapper:
@@ -47,7 +48,7 @@ class Combiner:
         self.id = id
         self.mapped_data = mapped_data
         self.alphanumeric_appearances = alphanumeric_appearances
-        self.filename = f"mapper_{self.id}.py"
+        self.filename = f"/mnt/longhorn/mapper_{self.id}.py"
         self.combined = {}
 
     def combine(self) -> dict:
@@ -75,7 +76,10 @@ class Combiner:
 
 # Give chunk and id
 if __name__ == "__main__":
-    split = "staygiannoudakis stavved all over the the place, stavved again then"
+
+    #file to map given by coordinator
+    with open(sys.argv[1], 'r') as in_file:
+        split = in_file.read()
     mapped_data_list: list[dict] = []
     mapper = Mapper(1)
     mapped_data = mapper.map(split)
