@@ -7,6 +7,7 @@ NUM_SPLITTERS = 1
 INPUT_FILE = "/mnt/longhorn/input_file"
 NUM_MAPPERS = 3
 
+
 def create_pods():
     config.load_incluster_config()
 
@@ -19,70 +20,32 @@ def create_pods():
                 "name": "splitter",
                 "image": "georgestav/splitter:latest",
                 "command": ["python", "splitter.py"],
-                "args": [
-                    INPUT_FILE,
-                    str(NUM_MAPPERS)
-                ],
-                "volumeMounts": [
-                    {
-                        "mountPath": "/mnt/longhorn",
-                        "name": "longhorn-storage"
-                    }
-                ]
+                "args": [INPUT_FILE, str(NUM_MAPPERS)],
+                "volumeMounts": [{"mountPath": "/mnt/longhorn", "name": "longhorn-storage"}],
             }
         ],
-        "volumes": [
-            {
-                "name": "longhorn-storage",
-                "persistentVolumeClaim": {
-                    "claimName": "longhorn-pvc"
-                }
-            }
-        ]
+        "volumes": [{"name": "longhorn-storage", "persistentVolumeClaim": {"claimName": "longhorn-pvc"}}],
     }
 
     splitter_statefulset_manifest = {
         "apiVersion": "apps/v1",
         "kind": "StatefulSet",
-        "metadata": {
-            "name": "splitter",
-            "namespace": "torpili"
-        },
+        "metadata": {"name": "splitter", "namespace": "torpili"},
         "spec": {
             "serviceName": "splitter-service",
             "podManagementPolicy": "Parallel",
             "replicas": NUM_SPLITTERS,
-            "selector": {
-                "matchLabels": {
-                    "app": "splitter"
-                }
-            },
-            "template": {
-                "metadata": {
-                    "labels": {
-                        "app": "splitter"
-                    }
-                },
-                "spec": splitter_spec_dict
-            }
-        }
+            "selector": {"matchLabels": {"app": "splitter"}},
+            "template": {"metadata": {"labels": {"app": "splitter"}}, "spec": splitter_spec_dict},
+        },
     }
 
     splitter_service_manifest = {
         "apiVersion": "v1",
         "kind": "Service",
-        "metadata": {
-            "name": "splitter-service"
-        },
-        "spec": {
-            "selector": {
-                "app": "splitter"
-            },
-            "type": "ClusterIP"
-        }
+        "metadata": {"name": "splitter-service"},
+        "spec": {"selector": {"app": "splitter"}, "type": "ClusterIP"},
     }
-
-
 
     mapper_spec_dict = {
         "containers": [
@@ -90,67 +53,31 @@ def create_pods():
                 "name": "mapper",
                 "image": "georgestav/mapper:latest",
                 "command": ["python", "mapper.py"],
-                "args": [
-                    "/mnt/longhorn/split0.txt"
-                ],
-                "volumeMounts": [
-                    {
-                        "mountPath": "/mnt/longhorn",
-                        "name": "longhorn-storage"
-                    }
-                ]
+                "args": ["/mnt/longhorn/split0.txt"],
+                "volumeMounts": [{"mountPath": "/mnt/longhorn", "name": "longhorn-storage"}],
             }
         ],
-        "volumes": [
-            {
-                "name": "longhorn-storage",
-                "persistentVolumeClaim": {
-                    "claimName": "longhorn-pvc"
-                }
-            }
-        ]
+        "volumes": [{"name": "longhorn-storage", "persistentVolumeClaim": {"claimName": "longhorn-pvc"}}],
     }
-
 
     mapper_statefulset_manifest = {
         "apiVersion": "apps/v1",
         "kind": "StatefulSet",
-        "metadata": {
-            "name": "mapper",
-            "namespace": "torpili"
-        },
+        "metadata": {"name": "mapper", "namespace": "torpili"},
         "spec": {
             "serviceName": "mapper-service",
             "podManagementPolicy": "Parallel",
             "replicas": NUM_MAPPERS,
-            "selector": {
-                "matchLabels": {
-                    "app": "mapper"
-                }
-            },
-            "template": {
-                "metadata": {
-                    "labels": {
-                        "app": "mapper"
-                    }
-                },
-                "spec": mapper_spec_dict
-            }
-        }
+            "selector": {"matchLabels": {"app": "mapper"}},
+            "template": {"metadata": {"labels": {"app": "mapper"}}, "spec": mapper_spec_dict},
+        },
     }
 
     splitter_service_manifest = {
         "apiVersion": "v1",
         "kind": "Service",
-        "metadata": {
-            "name": "mapper-service"
-        },
-        "spec": {
-            "selector": {
-                "app": "mapper"
-            },
-            "type": "ClusterIP"
-        }
+        "metadata": {"name": "mapper-service"},
+        "spec": {"selector": {"app": "mapper"}, "type": "ClusterIP"},
     }
 
     try:
@@ -177,7 +104,7 @@ def create_pods():
         # create mappers
         core_api.create_namespaced_service(NAMESPACE, splitter_service_manifest)
         apps_api.create_namespaced_stateful_set(NAMESPACE, splitter_statefulset_manifest)
-        
+
         mappers: list[V1Pod] = core_api.list_namespaced_pod(NAMESPACE, label_selector="app=mapper").items
 
         # loop untill all mappers have completed
@@ -194,5 +121,6 @@ def create_pods():
     except ApiException as e:
         print(f"Exception when creating pod: {e}")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     create_pods()
