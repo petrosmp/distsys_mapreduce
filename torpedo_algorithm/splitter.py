@@ -1,4 +1,5 @@
 from collections import defaultdict
+import sys
 
 
 class Splitter:
@@ -21,6 +22,7 @@ class Splitter:
             split_count += 1
             chunk = " ".join(words[i:i + self.words_per_split])
             splits[split_count] = chunk
+        self.write_files(splits)
         return splits
 
     def split_input(input_file, lines_per_split):
@@ -38,5 +40,21 @@ class Splitter:
         except Exception as e:
             print(f'Error while splitting file: {e}')
 
+    def write_files(self, splits: dict):
+        for i, split in enumerate(splits):  # Using enumerate to get index i
+            with open(f"/mnt/longhorn/split{i}.txt", 'w') as file:
+                file.write(splits[split])
 
-#second_text = "your mama your nice mama mama nice very"
+if __name__ == "__main__":
+
+    #the text to split
+    text = sys.argv[1]
+    
+    #num of chucnks to split to
+    split_num = int(sys.argv[2])
+
+    # mappers = [Mapper(i) for i in range(len(splits))]
+    splitter = Splitter(text, split_num)
+    splits = splitter.split()
+    print(splits)
+ 
