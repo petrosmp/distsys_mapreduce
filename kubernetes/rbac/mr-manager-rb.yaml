@@ -1,0 +1,13 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: mr-manager-rb
+  namespace: torpili
+subjects:
+- kind: ServiceAccount
+  name: mr-manager-sa
+  namespace: torpili
+roleRef:
+  kind: Role
+  name: mr-manager-role
+  apiGroup: rbac.authorization.k8s.io
