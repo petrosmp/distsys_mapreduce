@@ -48,7 +48,7 @@ class Combiner:
         self.id = id
         self.mapped_data = mapped_data
         self.alphanumeric_appearances = alphanumeric_appearances
-        self.filename = f"/mnt/longhorn/mapper_{self.id}.py"
+        self.filename = f"/mnt/longhorn/mapper_out/mapper_{self.id}.py"
         self.combined = {}
 
     def combine(self) -> dict:

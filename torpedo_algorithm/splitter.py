@@ -42,14 +42,16 @@ class Splitter:
 
     def write_files(self, splits: dict):
         for i, split in enumerate(splits):  # Using enumerate to get index i
-            with open(f"/mnt/longhorn/split{i}.txt", 'w') as file:
+            with open(f"/mnt/longhorn/split_out/split{i}.txt", 'w') as file:
                 file.write(splits[split])
 
 if __name__ == "__main__":
 
     #the text to split
-    text = sys.argv[1]
-    
+    text = ""
+    with open(sys.argv[1], 'r') as file:
+        text = file.read()
+
     #num of chucnks to split to
     split_num = int(sys.argv[2])
 
