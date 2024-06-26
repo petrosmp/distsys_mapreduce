@@ -21,6 +21,7 @@ class Splitter:
             split_count += 1
             chunk = " ".join(words[i:i + self.words_per_split])
             splits[split_count] = chunk
+        self.write_files(splits)
         return splits
 
     def split_input(input_file, lines_per_split):
@@ -38,5 +39,18 @@ class Splitter:
         except Exception as e:
             print(f'Error while splitting file: {e}')
 
+    def write_files(self, splits: dict):
+        for i, split in enumerate(splits):  # Using enumerate to get index i
+            with open(f"split{i}.txt", 'w') as file:
+                file.write(splits[split])
 
-#second_text = "your mama your nice mama mama nice very"
+if __name__ == "__main__":
+    text = ("we are avid we fans of PyPy and commensurately thankful for the great work by the PyPy team over "
+            "the years. PyPy has enabled us to use Python for a larger part of our toolset than CPython alone "
+            "would have supported, and its smooth integration with C/C++ through CFFI has helped us attain a "
+            "better tradeoff between performance and programmer productivity in our projects")
+
+    # mappers = [Mapper(i) for i in range(len(splits))]
+    splitter = Splitter(text, 10)
+    splits = splitter.split()
+    print(splits)

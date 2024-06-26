@@ -20,7 +20,7 @@ class Mapper:
     def keep_appearances(self, char: str):
         # Handles both lower and upper case
         if char.isalpha():
-            index = ord(char.lower()) - ord(FIRST_CHARACTER)
+            index = ord(char.lower()) - ord(self.FIRST_CHARACTER)
         elif char.isdigit():
             index = NUMBER_OF_LETTERS + int(char)
         else:
