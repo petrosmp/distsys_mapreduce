@@ -1,9 +1,6 @@
-from collections import defaultdict
-
-
 class Reducer:
-    def __init__(self):
-        self.reduced = defaultdict(int)
+    def __init__(self, letter: str):
+
 
     def reduce(self, combined_data_list: list) -> dict:
         """
