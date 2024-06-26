@@ -2,9 +2,11 @@ import os
 
 import flask_injector
 from injector import Binder, Module, inject
+from kubernetes.client import AppsV1Api, CoreV1Api
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import sessionmaker
 
+from kubernetes import config
 from src.torpedo.repository import Repository
 
 
@@ -12,6 +14,8 @@ class TorpedoModule(Module):  # type:ignore[misc]
     def configure(self, binder: Binder) -> None:
         binder.bind(Engine, to=self.engine, scope=flask_injector.singleton)  # type: ignore[attr-defined]
         binder.bind(Repository, to=self.repository, scope=flask_injector.singleton)  # type: ignore[attr-defined]
+        binder.bind(CoreV1Api, to=self.core_api, scope=flask_injector.singleton)  # type: ignore[attr-defined]
+        binder.bind(AppsV1Api, to=self.apps_api, scope=flask_injector.singleton)  # type: ignore[attr-defined]
 
     @inject
     def engine(self) -> Engine:
@@ -39,3 +43,13 @@ class TorpedoModule(Module):  # type:ignore[misc]
         Session = sessionmaker(bind=engine)  # noqa: N806
 
         return Repository(Session)
+
+    @inject
+    def core_api(self) -> CoreV1Api:
+        config.load_incluster_config()
+        return CoreV1Api()
+
+    @inject
+    def apps_api(self) -> AppsV1Api:
+        config.load_incluster_config()
+        return AppsV1Api()
