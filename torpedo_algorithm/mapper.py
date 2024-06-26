@@ -48,7 +48,7 @@ class Combiner:
         self.id = id
         self.mapped_data = mapped_data
         self.alphanumeric_appearances = alphanumeric_appearances
-        self.filename = f"/mnt/longhorn/mapper_out/mapper_{self.id}.py"
+        self.filename = f"/mnt/longhorn/mapper_out/mapper_{self.id}.txt"
         self.combined = {}
 
     def combine(self) -> dict:
@@ -70,8 +70,8 @@ class Combiner:
         """
         with open(self.filename, 'w') as file:
             # The first character appearance heatmap is stored for the 36 possible alphanumeric characters
-            file.write(f"mapcombine_{self.id}_bools = " + "\"" + self.alphanumeric_appearances + "\"")
-            file.write(f"\nmapcombine_{self.id}_output = ")
+            file.write(self.alphanumeric_appearances)
+            file.write("\n")
             file.write(repr(self.combined))
 
 # Give chunk and id
