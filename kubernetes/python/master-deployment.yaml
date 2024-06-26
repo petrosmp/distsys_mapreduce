@@ -12,6 +12,7 @@ spec:
       labels:
         app: master
     spec:
+      serviceAccountName: mr-manager-sa
       containers:
       - name: master
         image: petemp/distsys-mapred-master:latest
