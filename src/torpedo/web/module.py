@@ -1,4 +1,5 @@
 import os
+from http import HTTPStatus
 
 import flask_injector
 from injector import Binder, Module, inject
@@ -7,6 +8,7 @@ from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import sessionmaker
 
 from kubernetes import config
+from src.torpedo.errors import TorpedoException
 from src.torpedo.repository import Repository
 
 
@@ -46,10 +48,16 @@ class TorpedoModule(Module):  # type:ignore[misc]
 
     @inject
     def core_api(self) -> CoreV1Api:
-        config.load_incluster_config()
+        try:
+            config.load_incluster_config()
+        except Exception as e:
+            raise TorpedoException(f"error while loading kubernetes config: {e}", HTTPStatus.INTERNAL_SERVER_ERROR)
         return CoreV1Api()
 
     @inject
     def apps_api(self) -> AppsV1Api:
-        config.load_incluster_config()
+        try:
+            config.load_incluster_config()
+        except Exception as e:
+            raise TorpedoException(f"error while loading kubernetes config: {e}", HTTPStatus.INTERNAL_SERVER_ERROR)
         return AppsV1Api()
