@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mad-scientist
+  labels:
+    name: mad-scientist
+spec:
+  serviceAccountName: mr-manager-sa
+  containers:
+  - name: mad-scientist
+    image: python:3.12
+    command: ["/bin/sh"]
+    args: ["-c", "sleep 3600"]
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"

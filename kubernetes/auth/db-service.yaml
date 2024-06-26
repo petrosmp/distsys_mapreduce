@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-service
+spec:
+  selector:
+    # no matchLabels because services are simpler (but allow for less config)
+    app: db  # matches the selector tag of the deployments pods
+  type: ClusterIP # ClusterIP only accessible from inside cluster (also has loadbalancing but it is handled by kubernetes exclusively (no aws loadbalancer for excample)), NodePort is reachable but uses node's IP so it changes
+  ports:
+  - protocol: TCP
+    port: 5432 # outside facing port 
+    targetPort: 5432 # the container port to which the request will be forwarded
+
+
+# reminder:
+#   minikube service <service_name>
+# to run it
