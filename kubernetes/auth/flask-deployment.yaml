@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-deployment
+spec:
+  replicas: 3
+  template: # describing the pod that will be created
+    metadata:
+      labels:
+        app: flask  # both key and value arbitrary
+    spec:
+      containers:
+        - name: flask   # arbitrary
+          image: petemp/torpili_flask:latest
+          imagePullPolicy: Always # is the default when latest tag is specified but it doesnt seem to work
+          env:
+            - name: POSTGRES_USERNAME
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+            - name: POSTGRES_HOST
+              value: "db-service"
+            - name: POSTGRES_DB
+              value: local_db
+            - name: SECRET_KEY
+              value: supersecretkey
+          resources:
+            limits:
+              memory: 1Gi # describes the maximum amount of compute resources allowed
+              cpu: "1"
+            requests: #  describes the minimum amount of compute resources required
+              memory: 512Mi
+              cpu: "0.2"  # https://kubernetes.io/docs/tasks/configure-pod-container/assign-cpu-resource/#cpu-units
+  selector:
+    matchLabels:
+      app: flask    # has to match the template ones above
+
+
+# DEPLOYMENTS CAN MANAGE MULTIPLE PODS, BUT ONLY ONE KIND OF POD
