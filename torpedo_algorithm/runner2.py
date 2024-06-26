@@ -28,7 +28,7 @@ if __name__ == "__main__":
     for i, mapped_data in enumerate(mapped_data_list):
         (m_data, alphanumeric_appearances) = mapped_data_list[i]
         print(m_data)
-        combiner = Combiner(id, m_data, alphanumeric_appearances)
+        combiner = Combiner(i, m_data, alphanumeric_appearances)
         combiners.append(combiner)
         combined_data = combiner.combine(m_data)
         print(combined_data)

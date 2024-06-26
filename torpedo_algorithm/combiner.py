@@ -26,5 +26,5 @@ class Combiner:
         with open(self.filename, 'w') as file:
             # The first character appearance heatmap is stored for the 36 possible alphhanumeric characters
             file.write(self.alphanumeric_appearances)
-            file.write(f"mapcombine_{self.id}_output = ")
+            file.write(f"\nmapcombine_{self.id}_output = ")
             file.write(repr(self.combined))
