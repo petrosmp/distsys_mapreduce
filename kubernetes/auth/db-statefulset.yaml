@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: db
+  namespace: torpili
+spec:
+  serviceName: db-service 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+        - name: db-container
+          image: postgres:latest
+          volumeMounts:
+            - name: db-persistent-storage
+              mountPath: /var/lib/postgresql/ # having data here causes an error because it puts a lost+found dir under here which postgres does not expect
+              subPath: data
+          env:
+            - name: POSTGRES_DB
+              value: local_db
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              value: postgres
+          resources:
+            limits:
+              memory: 1Gi
+              cpu: "1"
+            requests:
+              memory: 512Mi
+              cpu: "0.2"
+          ports:
+            - containerPort: 5432
+  volumeClaimTemplates:
+    - metadata:
+        name: db-persistent-storage
+      spec:
+        accessModes: [ "ReadWriteMany" ]
+        storageClassName: longhorn
+        resources:
+          requests:
+            storage: 1.5Gi

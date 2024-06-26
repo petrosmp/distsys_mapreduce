@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: db-persistent-storage-db-0
+  namespace: torpili
+spec:
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  resources:
+    limits:
+      storage: 2Gi
+    requests:
+      storage: 1Gi
+  storageClassName: longhorn
