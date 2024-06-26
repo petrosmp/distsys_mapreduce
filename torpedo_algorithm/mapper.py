@@ -10,6 +10,7 @@ class Mapper:
         self.WHITESPACE_RE = re.compile(r'[\w\']+')
         self.NUMBER_OF_LETTERS = 26
         self.NUMBER_OF_DIGITS = 10
+        self.FIRST_CHARACTER = 'a'
         self.intermediate = []
         self.id = id
         # Keep track of the appearance of the possible alphanumeric characters as first characters
@@ -19,9 +20,9 @@ class Mapper:
     def keep_appearances(self, char: str):
         # Handles both lower and upper case
         if char.isalpha():
-            index = ord(char.lower()) - ord('a')
+            index = ord(char.lower()) - ord(FIRST_CHARACTER)
         elif char.isdigit():
-            index = 26 + int(char)
+            index = NUMBER_OF_LETTERS + int(char)
         else:
             return
         self.first_alphanumeric_appearance[index] = True
