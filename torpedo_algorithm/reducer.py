@@ -1,5 +1,7 @@
 class Reducer:
-    def __init__(self, letter: str):
+    def __init__(self, key: str):
+        # The word this reducer will handle
+        self.key = key
 
 
     def reduce(self, combined_data_list: list) -> dict:

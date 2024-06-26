@@ -24,7 +24,7 @@ class Combiner:
         Save combiner data to a temporary file in permanent storage
         """
         with open(self.filename, 'w') as file:
-            # The first character appearance heatmap is stored for the 36 possible alphhanumeric characters
-            file.write(self.alphanumeric_appearances)
+            # The first character appearance heatmap is stored for the 36 possible alphanumeric characters
+            file.write(f"mapcombine_{self.id}_bools = " + "\"" + self.alphanumeric_appearances + "\"")
             file.write(f"\nmapcombine_{self.id}_output = ")
             file.write(repr(self.combined))
