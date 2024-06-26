@@ -9,7 +9,7 @@ spec:
     image: georgestav/splitter:latest
     command: ["python", "splitter.py"] 
     args: 
-    - "worerw\n efwf w\n 23r ef\n"
+    - "/mnt/longhorn/input_file"
     - "3"
     volumeMounts:
     - mountPath: "/mnt/longhorn"
