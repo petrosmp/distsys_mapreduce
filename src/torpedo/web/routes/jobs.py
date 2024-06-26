@@ -21,14 +21,14 @@ def list_jobs():
 
 
 @jobs.route("/submit_job", methods=["POST"])
-@inject
 @requires_auth
+@inject
 def submit_job(apps_api: AppsV1Api):
     """Submit a new job for execution on the cluster"""
 
-    if not required_role_is_present(Role.SUBMIT_JOBS):
+    if not required_role_is_present(Role.SUBMIT_JOBS.value):
         raise TorpedoException(
-            f"You are not authorized to submit jobs (no '{Role.SUBMIT_JOBS}' role)", HTTPStatus.UNAUTHORIZED
+            f"You are not authorized to submit jobs (no '{Role.SUBMIT_JOBS.value}' role)", HTTPStatus.UNAUTHORIZED
         )
 
     num_mappers = request.json["num_mappers"]
