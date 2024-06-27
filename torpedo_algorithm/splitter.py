@@ -1,10 +1,13 @@
 from collections import defaultdict
 import sys
 
+alphanumeric_re: str = r'[^a-zA-Z0-9\s]'
+
 class Splitter:
-    def __init__(self, input_string: str, words_per_split: int):
-        self.input_string = input_string
-        self.words_per_split = words_per_split
+    def __init__(self, input_string: str, num_splits: int):
+        self.input_string = re.sub(alphanumeric_re, '', input_string)
+        self.num_splits = num_splits
+
 
     def split(self) -> dict:
         """
@@ -15,13 +18,19 @@ class Splitter:
         """
         words = self.input_string.split()
         total_words = len(words)
-        split_count = 0
+        words_per_split = total_words // self.num_splits
         splits = {}
-        for i in range(0, total_words, self.words_per_split):
-            split_count += 1
-            chunk = " ".join(words[i:i + self.words_per_split])
-            splits[split_count] = chunk
-        self.write_files(splits)
+
+        for i in range(self.num_splits):
+            # Get index by index * words_per_split
+            start_index = i * words_per_split
+            # For the last split, include all remaining words
+            if i == self.num_splits - 1:
+                end_index = total_words
+            else:
+                end_index = start_index + words_per_split
+            chunk = " ".join(words[start_index:end_index])
+            splits[i + 1] = chunk
         return splits
 
     def write_files(self, splits: dict):
