@@ -45,9 +45,9 @@ if __name__ == "__main__":
     with open(sys.argv[1], 'r') as file:
         text = file.read()
 
-    # number of words per chunk
-    words_per_split = int(sys.argv[2])
+    # Get number of splits as argument
+    num_of_splits = int(sys.argv[2])
 
-    splitter = Splitter(text, words_per_split)
+    splitter = Splitter(text, num_of_splits)
     splits = splitter.split()
     # print(splits)
