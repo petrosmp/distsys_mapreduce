@@ -18,3 +18,5 @@ alembic==1.13.1
 # dev requirements
 tox==4.15.1
 pytest==8.2.2
+
+kubernetes==30.1.0

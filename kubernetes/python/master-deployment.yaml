@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: master
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: master
+  template:
+    metadata:
+      labels:
+        app: master
+    spec:
+      serviceAccountName: mr-manager-sa
+      containers:
+      - name: master
+        image: petemp/distsys-mapred-master:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+
+# this is a deployment just so it is restarted on failure

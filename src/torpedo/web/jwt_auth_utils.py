@@ -39,8 +39,7 @@ def requires_auth(f: Callable[P, Any]) -> Callable[P, Any]:
     """Determines if the Access Token is valid"""
 
     @wraps(f)
-    @inject
-    def decorated(repository: Repository, *args: P.args, **kwargs: P.kwargs) -> Any:
+    def decorated(*args: P.args, **kwargs: P.kwargs) -> Any:
         token = get_token_from_auth_header()
         try:
             jwt.decode(token, current_app.config["SECRET_KEY"], algorithms=["HS256"])
@@ -49,18 +48,7 @@ def requires_auth(f: Callable[P, Any]) -> Callable[P, Any]:
         except Exception:
             raise AuthException("Unable to parse authentication token.", HTTPStatus.UNAUTHORIZED)
 
-        # also check that the token is in the DB (and thus the user hasn't logged out, invalidating the token)
-        try:
-            valid = repository.token_is_valid(token)
-        except Exception:
-            raise TorpedoException("unexpected DB error", HTTPStatus.INTERNAL_SERVER_ERROR)
-
-        if not valid:
-            raise AuthException("token has been invalidated", HTTPStatus.UNAUTHORIZED)
-
-        from src.torpedo.web.module import TorpedoModule
-
-        return flask_injector.Injector(modules=[TorpedoModule]).call_with_injection(f, *args, **kwargs)
+        return f(*args, **kwargs)
 
     return decorated
 

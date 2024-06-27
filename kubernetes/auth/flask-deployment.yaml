@@ -9,10 +9,10 @@ spec:
       labels:
         app: flask  # both key and value arbitrary
     spec:
+      serviceAccountName: mr-manager-sa
       containers:
         - name: flask   # arbitrary
           image: petemp/torpili_flask:latest
-          imagePullPolicy: Always # is the default when latest tag is specified but it doesnt seem to work
           env:
             - name: POSTGRES_USERNAME
               value: postgres

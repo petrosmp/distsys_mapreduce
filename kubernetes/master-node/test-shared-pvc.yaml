@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: test-shared-pvc
+  namespace: torpili
+spec:
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  resources:
+    limits:
+      storage: 1Gi
+    requests:
+      storage: 0.25Gi
+  storageClassName: longhorn
