@@ -50,4 +50,5 @@ if __name__ == "__main__":
 
     splitter = Splitter(text, num_of_splits)
     splits = splitter.split()
+    splitter.write_files(splits)
     # print(splits)
