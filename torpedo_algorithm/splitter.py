@@ -33,7 +33,7 @@ class Splitter:
             else:
                 end_index = start_index + words_per_split
             chunk = " ".join(words[start_index:end_index])
-            splits[i + 1] = chunk
+            splits[i] = chunk
         return splits
 
     def write_files(self, splits: dict):
