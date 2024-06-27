@@ -117,6 +117,6 @@ if __name__ == '__main__':
     # pod_index_store = pod_name.rsplit('-', 1)[-1]
     # pod_index = int(pod_index_store)
     num_reducers = int(os.environ.get('NUM_REDUCERS'))
-    shuffler = Shuffler(num_reducers-1)
+    shuffler = Shuffler(num_reducers)
     shuffler.print_groups()
     shuffler.filter_relevant_files()
