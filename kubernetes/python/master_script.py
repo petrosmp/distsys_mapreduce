@@ -1,11 +1,8 @@
 from kubernetes import client, config
 from kubernetes.client.rest import ApiException
 from kubernetes.client.models import V1Pod
-<<<<<<< HEAD
 from time import sleep
-=======
 import os
->>>>>>> 4dc3f701703c12c9bb68b664556f959e933e325c
 
 NAMESPACE = "torpili"
 INPUT_FILE = os.getenv("INPUT_FILE", "/mnt/longhorn/input_file")
