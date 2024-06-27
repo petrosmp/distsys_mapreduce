@@ -44,16 +44,25 @@ def create_pods():
         "apiVersion": "v1",
         "kind": "Service",
         "metadata": {"name": "splitter-service"},
-        "spec": {"selector": {"app": "splitter"}, "type": "ClusterIP"},
+        "spec": {"selector": {"app": "splitter"}, "type": "ClusterIP", "ports": [{"port": 7777, "targetPort": 7777}]},
     }
 
     mapper_spec_dict = {
         "containers": [
             {
                 "name": "mapper",
+                "env": [
+                    {
+                        "name": "POD_NAME",
+                        "valueFrom": {
+                            "fieldRef": {
+                                "fieldPath": "metadata.name"
+                            }
+                        }
+                    }
+                ],
                 "image": "georgestav/mapper:latest",
                 "command": ["python", "mapper.py"],
-                "args": ["/mnt/longhorn/split0.txt"],
                 "volumeMounts": [{"mountPath": "/mnt/longhorn", "name": "longhorn-storage"}],
             }
         ],
@@ -73,16 +82,20 @@ def create_pods():
         },
     }
 
-    splitter_service_manifest = {
+    mapper_service_manifest = {
         "apiVersion": "v1",
         "kind": "Service",
         "metadata": {"name": "mapper-service"},
-        "spec": {"selector": {"app": "mapper"}, "type": "ClusterIP"},
+        "spec": {"selector": {"app": "mapper"}, "type": "ClusterIP", "ports": [{"port": 7777, "targetPort": 7777}]}
     }
 
     try:
 
         # create splitters
+        try:
+            core_api.delete_namespaced_service(namespace=NAMESPACE, name="splitter-service")
+        except:
+            pass
         core_api.create_namespaced_service(NAMESPACE, splitter_service_manifest)
         apps_api.create_namespaced_stateful_set(NAMESPACE, splitter_statefulset_manifest)
 
@@ -101,9 +114,11 @@ def create_pods():
         # TODO: could write to a file here (and after each stage) so that if the master is killed, the execution
         # is picked up where it was left of
 
+        print(f"done splitting")
+
         # create mappers
-        core_api.create_namespaced_service(NAMESPACE, splitter_service_manifest)
-        apps_api.create_namespaced_stateful_set(NAMESPACE, splitter_statefulset_manifest)
+        core_api.create_namespaced_service(NAMESPACE, mapper_service_manifest)
+        apps_api.create_namespaced_stateful_set(NAMESPACE, mapper_statefulset_manifest)
 
         mappers: list[V1Pod] = core_api.list_namespaced_pod(NAMESPACE, label_selector="app=mapper").items
 
@@ -116,8 +131,15 @@ def create_pods():
                     i += 1
                     break
             break
+        print(f"done mapping")
 
         print("Split & Map completed successfully")
+
+        apps_api.delete_namespaced_stateful_set(namespace=NAMESPACE, name="splitter")
+        apps_api.delete_namespaced_stateful_set(namespace=NAMESPACE, name="mapper")
+        core_api.delete_namespaced_service(namespace=NAMESPACE, name="splitter-service")
+        core_api.delete_namespaced_service(namespace=NAMESPACE, name="mapper-service")
+        print("deleted services & statefulsets successfully")
     except ApiException as e:
         print(f"Exception when creating pod: {e}")
 
