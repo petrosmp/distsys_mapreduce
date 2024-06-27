@@ -1,13 +1,18 @@
 from kubernetes import client, config
 from kubernetes.client.rest import ApiException
 from kubernetes.client.models import V1Pod
+<<<<<<< HEAD
 from time import sleep
+=======
+import os
+>>>>>>> 4dc3f701703c12c9bb68b664556f959e933e325c
 
 NAMESPACE = "torpili"
+INPUT_FILE = os.getenv("INPUT_FILE", "/mnt/longhorn/input_file")
 NUM_SPLITTERS = 1
-INPUT_FILE = "/mnt/longhorn/input_file"
-NUM_MAPPERS = 3
-
+NUM_SHUFFLERS = 1
+NUM_MAPPERS = int(os.getenv("NUM_MAPPERS", 3))
+NUM_REDUCERS = int(os.getenv("NUM_REDUCERS", 5))
 
 def create_pods():
     config.load_incluster_config()
@@ -238,7 +243,6 @@ def create_pods():
                     break
             break
         sleep(15)
-
         print(f"done shuffling")
 
 
@@ -258,7 +262,6 @@ def create_pods():
                     break
             break
         sleep(15)
-
         print(f"done reducing")
 
 
@@ -266,8 +269,12 @@ def create_pods():
 
         apps_api.delete_namespaced_stateful_set(namespace=NAMESPACE, name="splitter")
         apps_api.delete_namespaced_stateful_set(namespace=NAMESPACE, name="mapper")
+        apps_api.delete_namespaced_stateful_set(namespace=NAMESPACE, name="shuffler")
+        apps_api.delete_namespaced_stateful_set(namespace=NAMESPACE, name="reducer")
         core_api.delete_namespaced_service(namespace=NAMESPACE, name="splitter-service")
         core_api.delete_namespaced_service(namespace=NAMESPACE, name="mapper-service")
+        core_api.delete_namespaced_service(namespace=NAMESPACE, name="shuffler-service")
+        core_api.delete_namespaced_service(namespace=NAMESPACE, name="reducer-service")
         print("deleted services & statefulsets successfully")
     except ApiException as e:
         print(f"Exception when creating pod: {e}")

@@ -55,8 +55,7 @@ def list_map_files(directory):
     return [os.path.join(directory, f) for f in os.listdir(directory) if f.startswith('mapper_') and f.endswith('.txt')]
 
 class Shuffler:
-    def __init__(self, id: int, num_of_reducers: int):
-        self.id: int = id
+    def __init__(self, num_of_reducers: int):
         self.num_of_reducers: int = num_of_reducers
         self.groups: list = self.divide_alphabet(self.num_of_reducers)
         self.reducer_data: dict
@@ -77,7 +76,7 @@ class Shuffler:
             # Create letter group bit code, will probably be consecutive bits
             group_bitmask = create_bitmask(group)
             # TODO implement directory
-            files = list_map_files("/Users/christofilojohn/Documents/GitHub/distsys_mapreduce/torpedo_algorithm/")
+            files = list_map_files("/mnt/longhorn/mapper_out/")
             relevant_dicts = []
             for filename in files:
                 with open(filename, 'r') as f:
@@ -92,7 +91,7 @@ class Shuffler:
                         #self.process_dictionary(filtered_dict)
                         relevant_dicts.append(filtered_dict)
             # Write the relevant_dicts to a file with the group index in the filename
-            output_file = f'shuffler_{index}_{group}.json'
+            output_file = f'/mnt/longhorn/shuffler_out/shuffler_{index}.json'
             with open(output_file, 'w') as f:
                 json.dump(relevant_dicts, f)
 
@@ -112,6 +111,10 @@ class Shuffler:
 
 
 if __name__ == '__main__':
-    shuffler = Shuffler(2, 5)
+    # pod_name = os.environ.get('POD_NAME')
+    # pod_index_store = pod_name.rsplit('-', 1)[-1]
+    # pod_index = int(pod_index_store)
+    num_reducers = int(os.environ.get('NUM_REDUCERS'))
+    shuffler = Shuffler(num_reducers-1)
     shuffler.print_groups()
     shuffler.filter_relevant_files()

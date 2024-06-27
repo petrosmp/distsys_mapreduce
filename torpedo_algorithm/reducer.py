@@ -2,6 +2,9 @@ import json
 import os
 
 
+directory = "/mnt/longhorn/shuffler_out"
+directory_out = "/mnt/longhorn/reducer_out"
+
 class Reducer:
     def __init__(self, reducer_id: str):
         self.reducer_id = reducer_id
@@ -24,29 +27,18 @@ class Reducer:
             json.dump(self.reduced, f)
 
     def run(self):
-        # Find all files corresponding to the pod ID
-        files = [f for f in os.listdir("/Users/christofilojohn/Documents/GitHub/distsys_mapreduce/torpedo_algorithm/") if
-                 f.startswith(f'shuffler_{self.reducer_id}_') and f.endswith('.json')]
-
-        for filename in files:
-            reduce_output_filename = f'/Users/christofilojohn/Documents/GitHub/distsys_mapreduce/torpedo_algorithm/reduced_{filename.split("_")[1]}_{filename.split("_")[2]}'
-            self.reduce_file(filename, reduce_output_filename)
+        file_to_open = f"shuffler_{self.reducer_id}.json"
+        filename = os.path.join(directory, file_to_open)
+        reduce_output_file_to_open = f'reduced__{self.reducer_id}.json'
+        reduce_output_filename = os.path.join(directory_out, reduce_output_file_to_open)
+        self.reduce_file(filename, reduce_output_filename)
 
 
 # Example usage
 if __name__ == "__main__":
-    reducer_id = '0'
-    reducer = Reducer(reducer_id)
-    reducer.run()
-    reducer_id = '1'
-    reducer = Reducer(reducer_id)
-    reducer.run()
-    reducer_id = '2'
-    reducer = Reducer(reducer_id)
-    reducer.run()
-    reducer_id = '3'
-    reducer = Reducer(reducer_id)
-    reducer.run()
-    reducer_id = '4'
-    reducer = Reducer(reducer_id)
+    pod_name = os.environ.get('POD_NAME')
+    pod_index_store = pod_name.rsplit('-', 1)[-1]
+    pod_index = int(pod_index_store)
+    reducer_id = pod_index
+    reducer = Reducer(str(reducer_id))
     reducer.run()
