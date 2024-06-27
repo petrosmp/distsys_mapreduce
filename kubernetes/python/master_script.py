@@ -12,13 +12,13 @@ NUM_SPLITTERS = 1
 NUM_SHUFFLERS = 1
 NUM_MAPPERS = int(os.getenv("NUM_MAPPERS", 3))
 NUM_REDUCERS = int(os.getenv("NUM_REDUCERS", 5))
-JOB_ID = os.getenv("NUM_REDUCERS")
+JOB_ID = os.getenv("JOB_ID")
 STATE_FILE_NAME = "STATE"
 
 
 def save_state(state):
     with open(f"{job_dir}/{STATE_FILE_NAME}", 'w') as file:
-        file.write(state)
+        file.write(str(state))
 
 
 def create_pods(state: int):
@@ -324,19 +324,26 @@ def create_pods(state: int):
 
 if __name__ == "__main__":
 
-    job_dir = f"/mnt/longhorn/{JOB_ID}"
+    job_dir = f"/mnt/longhorn/job_{JOB_ID}"
 
     if os.path.exists(job_dir):
         try:
             with open(f"{job_dir}/{STATE_FILE_NAME}", 'r') as file:
                 content = file.read()
-            state = int(content)
+            if content:
+                state = int(content)
+            else:
+                state = job_state.INITIALIZED
         except FileNotFoundError:   # catch cases where crash happened before even saving state file
             state = job_state.INITIALIZED
     else:
         os.makedirs(job_dir)
+        os.makedirs(f"{job_dir}/mapper_out")
+        os.makedirs(f"{job_dir}/reducer_out")
+        os.makedirs(f"{job_dir}/shuffler_out")
+        os.makedirs(f"{job_dir}/split_out")
         with open(f"{job_dir}/{STATE_FILE_NAME}", 'w') as file:
-            file.write(job_state.INITIALIZED)
+            file.write(str(job_state.INITIALIZED))
         state = job_state.INITIALIZED
 
     create_pods(state)
