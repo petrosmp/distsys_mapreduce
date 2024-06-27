@@ -55,10 +55,10 @@ def list_map_files(directory):
     return [os.path.join(directory, f) for f in os.listdir(directory) if f.startswith('mapper_') and f.endswith('.txt')]
 
 class Shuffler:
-    def __init__(self, id: int, num_of_shufflers: int):
+    def __init__(self, id: int, num_of_reducers: int):
         self.id: int = id
-        self.num_of_shufflers: int = num_of_shufflers
-        self.groups: list = self.divide_alphabet(self.num_of_shufflers)
+        self.num_of_reducers: int = num_of_reducers
+        self.groups: list = self.divide_alphabet(self.num_of_reducers)
         self.reducer_data: dict
         self.relevant_dicts: list[dict]
 

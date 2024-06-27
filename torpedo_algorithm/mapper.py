@@ -76,20 +76,19 @@ class Combiner:
 
 # Give chunk and id
 if __name__ == "__main__":
-
     pod_name = os.environ.get('POD_NAME')
-    pod_index_stor = pod_name.rsplit('-',1)[-1]
-    pod_index = int(pod_index_stor)
+    pod_index_store = pod_name.rsplit('-',1)[-1]
+    pod_index = int(pod_index_store)
     input_filename = f'/mnt/longhorn/split_out/split{pod_index}.txt'
 
     #file to map given by coordinator
     with open(input_filename, 'r') as in_file:
         split = in_file.read()
     mapped_data_list: list[dict] = []
-    mapper = Mapper(1)
+    mapper = Mapper(pod_index)
     mapped_data = mapper.map(split)
     (combiner_input, alphanumeric_appearances) = mapped_data
-    combiner = Combiner(1, combiner_input, alphanumeric_appearances)
+    combiner = Combiner(pod_index, combiner_input, alphanumeric_appearances)
     combiner.combine()
 
     #
