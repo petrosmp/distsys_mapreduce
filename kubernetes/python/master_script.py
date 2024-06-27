@@ -10,6 +10,7 @@ NUM_SPLITTERS = 1
 NUM_SHUFFLERS = 1
 NUM_MAPPERS = int(os.getenv("NUM_MAPPERS", 3))
 NUM_REDUCERS = int(os.getenv("NUM_REDUCERS", 5))
+JOB_ID = os.getenv("NUM_REDUCERS")
 
 def create_pods():
     config.load_incluster_config()
@@ -22,6 +23,12 @@ def create_pods():
             {
                 "name": "splitter",
                 "image": "georgestav/splitter:latest",
+                "env": [
+                    {
+                        "name": "JOB_ID",
+                        "value": JOB_ID
+                    }
+                ],
                 "command": ["python", "splitter.py"],
                 "args": [INPUT_FILE, str(NUM_MAPPERS)],
                 "volumeMounts": [{"mountPath": "/mnt/longhorn", "name": "longhorn-storage"}],
@@ -54,6 +61,7 @@ def create_pods():
         "containers": [
             {
                 "name": "mapper",
+                "image": "georgestav/mapper:latest",
                 "env": [
                     {
                         "name": "POD_NAME",
@@ -62,9 +70,12 @@ def create_pods():
                                 "fieldPath": "metadata.name"
                             }
                         }
+                    },
+                    {
+                        "name": "JOB_ID",
+                        "value": JOB_ID
                     }
                 ],
-                "image": "georgestav/mapper:latest",
                 "command": ["python", "mapper.py"],
                 "volumeMounts": [{"mountPath": "/mnt/longhorn", "name": "longhorn-storage"}],
             }
@@ -102,6 +113,10 @@ def create_pods():
                     {
                         "name": "NUM_REDUCERS",
                         "value": str(NUM_REDUCERS)
+                    },
+                    {
+                        "name": "JOB_ID",
+                        "value": JOB_ID
                     }
                 ],
                 "command": ["python", "shuffler.py"],
@@ -144,6 +159,10 @@ def create_pods():
                                 "fieldPath": "metadata.name"
                             }
                         }
+                    },
+                    {
+                        "name": "JOB_ID",
+                        "value": JOB_ID
                     }
                 ],
                 "image": "georgestav/reducer:latest",
