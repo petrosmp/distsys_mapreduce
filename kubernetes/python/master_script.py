@@ -266,40 +266,54 @@ def create_pods(state: int):
 
     try:
 
-        if state < job_state.SPLIT_PHASE_DONE:
+        if state < job_state.SPLIT_PHASE_ONGOING:
             batch_api.create_namespaced_job(NAMESPACE, splitter_job_manifest)
 
+            state = job_state.SPLIT_PHASE_ONGOING
+            save_state(state)
+
+        if state < job_state.SPLIT_PHASE_DONE:
             wait_for_job_completion(f"splitter-{JOB_ID}", NAMESPACE)
 
             state = job_state.SPLIT_PHASE_DONE
             save_state(state)
 
-        if state < job_state.MAP_PHASE_DONE:
+        if state < job_state.MAP_PHASE_ONGOING:
             batch_api.create_namespaced_job(NAMESPACE, mapper_job_manifest)
             
+            state = job_state.MAP_PHASE_ONGOING
+            save_state(state)
+
+        if state < job_state.MAP_PHASE_DONE:
             wait_for_job_completion(f"mapper-{JOB_ID}", NAMESPACE)
 
             state = job_state.MAP_PHASE_DONE
             save_state(state)
 
-        if state < job_state.SHUFFLE_PHASE_DONE:
+        if state < job_state.SHUFFLE_PHASE_ONGOING:
             batch_api.create_namespaced_job(NAMESPACE, shuffler_job_manifest)
+           
+            state = job_state.SHUFFLE_PHASE_ONGOING
+            save_state(state)
 
+        if state < job_state.SHUFFLE_PHASE_DONE:
             wait_for_job_completion(f"shuffler-{JOB_ID}", NAMESPACE)
 
             state = job_state.SHUFFLE_PHASE_DONE
             save_state(state)
 
-        if state < job_state.REDUCE_PHASE_DONE:
+        if state < job_state.REDUCE_PHASE_ONGOING:
             batch_api.create_namespaced_job(NAMESPACE, reducer_job_manifest)
 
+            state = job_state.REDUCE_PHASE_ONGOING
+            save_state(state)
+
+
+        if state < job_state.REDUCE_PHASE_DONE:
             wait_for_job_completion(f"reducer-{JOB_ID}", NAMESPACE)
 
             state = job_state.REDUCE_PHASE_DONE
             save_state(state)
-
-
-        print("Split & Map & Shuffle & Reduce completed successfully")
 
         # we only reach here if everything that had to be run was run
         state = job_state.FINISHED
@@ -307,6 +321,7 @@ def create_pods(state: int):
         print("deleted services & statefulsets successfully")
     except ApiException as e:
         print(f"Exception when creating pod: {e}")
+        exit(1)
 
 if __name__ == "__main__":
 
