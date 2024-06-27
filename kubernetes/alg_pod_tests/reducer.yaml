@@ -9,7 +9,7 @@ spec:
     env:
       - name: POD_NAME
         value: pod-0
-    image: georgestav/mapper:latest
+    image: georgestav/reducer:latest
     command: ["python", "reducer.py"] 
     volumeMounts:
     - mountPath: "/mnt/longhorn"
