@@ -77,7 +77,7 @@ class Shuffler:
             # Create letter group bit code, will probably be consecutive bits
             group_bitmask = create_bitmask(group)
             # TODO implement directory
-            files = list_map_files("/Users/christofilojohn/Documents/GitHub/distsys_mapreduce/torpedo_algorithm/")
+            files = list_map_files("/mnt/longhorn/mapper_out/")
             relevant_dicts = []
             for filename in files:
                 with open(filename, 'r') as f:
@@ -92,7 +92,7 @@ class Shuffler:
                         #self.process_dictionary(filtered_dict)
                         relevant_dicts.append(filtered_dict)
             # Write the relevant_dicts to a file with the group index in the filename
-            output_file = f'shuffler_{index}_{group}.json'
+            output_file = f'/mnt/longhorn/shuffler_out/shuffler_{index}_{group}.json'
             with open(output_file, 'w') as f:
                 json.dump(relevant_dicts, f)
 
