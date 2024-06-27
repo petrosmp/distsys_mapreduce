@@ -1,9 +1,9 @@
 import json
 import os
 
-
-directory = "/mnt/longhorn/shuffler_out"
-directory_out = "/mnt/longhorn/reducer_out"
+job_id = os.environ.get('JOB_ID')
+directory = f'/mnt/longhorn/job_{job_id}/shuffler_out'
+directory_out = f'/mnt/longhorn/job_{job_id}/reducer_out'
 
 class Reducer:
     def __init__(self, reducer_id: str):

@@ -8,7 +8,9 @@ spec:
   - name: mapper
     env:
       - name: POD_NAME
-        value: pod-0
+        value: pod-2
+      - name: JOB_ID
+        value: "23"  
     image: georgestav/mapper:latest
     command: ["python", "mapper.py"] 
     args:
