@@ -26,7 +26,7 @@ class Reducer:
     def run(self):
         # Find all files corresponding to the pod ID
         files = [f for f in os.listdir("/mnt/longhorn/shuffler_out") if
-                 f.startswith(f'shuffler_{self.reducer_id}_') and f.endswith('.json')]
+                 f.startswith(f'/mnt/longhorn/shuffler_out/shuffler_{self.reducer_id}_') and f.endswith('.json')]
 
         for filename in files:
             reduce_output_filename = f'/mnt/longhorn/reducer_out/reduced_{filename.split("_")[1]}_{filename.split("_")[2]}'
