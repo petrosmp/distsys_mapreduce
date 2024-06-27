@@ -49,4 +49,4 @@ if __name__ == "__main__":
 
     splitter = Splitter(text, words_per_split)
     splits = splitter.split()
-    print(splits)
+    # print(splits)
