@@ -80,7 +80,7 @@ if __name__ == "__main__":
     pod_name = os.environ.get('POD_NAME')
     pod_index_stor = pod_name.rsplit('-',1)[-1]
     pod_index = int(pod_index_stor)
-    input_filename = f'split{pod_index}.txt'
+    input_filename = f'/mnt/longhorn/split_out/split{pod_index}.txt'
 
     #file to map given by coordinator
     with open(input_filename, 'r') as in_file:
