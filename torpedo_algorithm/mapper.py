@@ -79,9 +79,7 @@ class Combiner:
 
 # Give chunk and id
 if __name__ == "__main__":
-    pod_name = os.environ.get('POD_NAME')
-    pod_index_store = pod_name.rsplit('-',1)[-1]
-    pod_index = int(pod_index_store)
+    pod_index = int(os.environ.get('JOB_COMPLETION_INDEX'))
 
     input_filename = f'/mnt/longhorn/job_{job_id}/split_out/split{pod_index}.txt'
 
@@ -103,3 +101,4 @@ if __name__ == "__main__":
     #     # for splits
     #     with open(filename, 'w') as file:
     #         file.write(repr(self.combined))
+

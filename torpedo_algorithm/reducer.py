@@ -36,9 +36,8 @@ class Reducer:
 
 # Example usage
 if __name__ == "__main__":
-    pod_name = os.environ.get('POD_NAME')
-    pod_index_store = pod_name.rsplit('-', 1)[-1]
-    pod_index = int(pod_index_store)
+    pod_index = int(os.environ.get('JOB_COMPLETION_INDEX'))
     reducer_id = pod_index
     reducer = Reducer(str(reducer_id))
     reducer.run()
+
