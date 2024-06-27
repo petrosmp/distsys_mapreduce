@@ -2,6 +2,9 @@ import json
 import os
 
 
+directory = "/mnt/longhorn/shuffler_out"
+directory_out = "/mnt/longhorn/reducer_out"
+
 class Reducer:
     def __init__(self, reducer_id: str):
         self.reducer_id = reducer_id
@@ -24,13 +27,11 @@ class Reducer:
             json.dump(self.reduced, f)
 
     def run(self):
-        # Find all files corresponding to the pod ID
-        files = [f for f in os.listdir("/mnt/longhorn/shuffler_out") if
-                 f.startswith(f'/mnt/longhorn/shuffler_out/shuffler_{self.reducer_id}_') and f.endswith('.json')]
-
-        for filename in files:
-            reduce_output_filename = f'/mnt/longhorn/reducer_out/reduced_{filename.split("_")[1]}_{filename.split("_")[2]}'
-            self.reduce_file(filename, reduce_output_filename)
+        file_to_open = f"shuffler_{self.reducer_id}.json"
+        filename = os.path.join(directory, file_to_open)
+        reduce_output_file_to_open = f'reduced__{self.reducer_id}.json'
+        reduce_output_filename = os.path.join(directory_out, reduce_output_file_to_open)
+        self.reduce_file(filename, reduce_output_filename)
 
 
 # Example usage

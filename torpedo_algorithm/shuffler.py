@@ -91,7 +91,7 @@ class Shuffler:
                         #self.process_dictionary(filtered_dict)
                         relevant_dicts.append(filtered_dict)
             # Write the relevant_dicts to a file with the group index in the filename
-            output_file = f'/mnt/longhorn/shuffler_out/shuffler_{index}_{group}.json'
+            output_file = f'/mnt/longhorn/shuffler_out/shuffler_{index}.json'
             with open(output_file, 'w') as f:
                 json.dump(relevant_dicts, f)
 
