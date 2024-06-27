@@ -6,6 +6,9 @@ metadata:
 spec:
   containers:
   - name: mapper
+    env:
+      - name: POD_NAME
+        value: pod-0
     image: georgestav/mapper:latest
     command: ["python", "mapper.py"] 
     args:

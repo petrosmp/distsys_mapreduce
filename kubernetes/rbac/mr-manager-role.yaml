@@ -8,8 +8,20 @@ rules:
     resources: ["pods"]
     verbs: ["get", "list", "create", "update", "patch", "watch", "delete", "deletecollection"]
 
-  - apiGroups: ["apps"]  # indicates the apps API group for StatefulSets
+  - apiGroups: [""]
+    resources: ["services"]
+    verbs: ["get", "list", "create", "update", "patch", "watch", "delete", "deletecollection"]
+
+  - apiGroups: ["apps"]
     resources: ["statefulsets"]
+    verbs: ["get", "list", "create", "update", "patch", "watch", "delete", "deletecollection"]
+
+  - apiGroups: ["apps"]  # indicates the apps API group
+    resources: ["deployments"]
+    verbs: ["get", "list", "create", "update", "patch", "watch", "delete", "deletecollection"]
+
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
     verbs: ["get", "list", "create", "update", "patch", "watch", "delete", "deletecollection"]
 
   - apiGroups: [""]

@@ -14,4 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Command to run the script
-CMD ["python", "create_pods.py"]
+CMD ["python", "master_script.py"]
