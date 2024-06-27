@@ -70,9 +70,9 @@ def submit_job(apps_api: AppsV1Api):
                                 "image": "petemp/distsys-mapred-master:latest",
                                 "resources": {"limits": {"memory": "128Mi", "cpu": "500m"}},
                                 "env": [
-                                    {"name": "NUM_MAPPERS", "value": num_mappers},
-                                    {"name": "NUM_REDUCERS", "value": num_reducers},
-                                    {"name": "INPUT_FILE", "value": input_file},
+                                    {"name": "NUM_MAPPERS", "value": str(num_mappers)},
+                                    {"name": "NUM_REDUCERS", "value": str(num_reducers)},
+                                    {"name": "INPUT_FILE", "value": str(input_file)},
                                 ]
                             }
                         ],
