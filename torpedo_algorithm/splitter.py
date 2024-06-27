@@ -36,7 +36,7 @@ class Splitter:
 
     def write_files(self, splits: dict):
         for i, split in splits.items():
-            with open(f"split_out/split{i}.txt", 'w') as file:
+            with open(f"/mnt/longhorn/split_out/split{i}.txt", 'w') as file:
                 file.write(split)
 
 if __name__ == "__main__":
