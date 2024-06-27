@@ -8,6 +8,8 @@ from src.torpedo.errors import TorpedoException
 from src.torpedo.models import Role
 from src.torpedo.web.jwt_auth_utils import required_role_is_present, requires_auth
 
+import uuid
+
 NAMESPACE = "torpili"
 
 jobs = Blueprint("jobs", __name__)
@@ -39,7 +41,7 @@ def submit_job(apps_api: AppsV1Api):
 
     try:
 
-        job_id = 0  # this should be stored somewhere
+        job_id = str(uuid.uuid1())  # this should be stored somewhere
         master_name = f"master-{job_id}"
 
         master_pod_spec = {
@@ -73,6 +75,7 @@ def submit_job(apps_api: AppsV1Api):
                                     {"name": "NUM_MAPPERS", "value": str(num_mappers)},
                                     {"name": "NUM_REDUCERS", "value": str(num_reducers)},
                                     {"name": "INPUT_FILE", "value": str(input_file)},
+                                    {"name": "JOB_ID", "value": job_id},
                                 ]
                             }
                         ],
@@ -87,4 +90,4 @@ def submit_job(apps_api: AppsV1Api):
     except Exception as e:
         raise TorpedoException(f"error while creating master deployment: {e}", HTTPStatus.INTERNAL_SERVER_ERROR)
 
-    return jsonify({"status": "ok", "message": f"job submitted successfully"})
+    return jsonify({"status": "ok", "message": f"job {job_id} submitted successfully"})
