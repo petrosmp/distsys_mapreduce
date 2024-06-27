@@ -1,11 +1,13 @@
 from kubernetes import client, config
 from kubernetes.client.rest import ApiException
 from kubernetes.client.models import V1Pod
+import os
 
 NAMESPACE = "torpili"
 NUM_SPLITTERS = 1
-INPUT_FILE = "/mnt/longhorn/input_file"
-NUM_MAPPERS = 3
+INPUT_FILE = os.getenv("INPUT_FILE", "/mnt/longhorn/input_file")
+NUM_MAPPERS = int(os.getenv("NUM_MAPPERS", 3))
+NUM_REDUCERS = int(os.getenv("NUM_REDUCERS", 5))
 
 
 def create_pods():
