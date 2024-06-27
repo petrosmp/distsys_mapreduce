@@ -112,6 +112,12 @@ class Shuffler:
 
 
 if __name__ == '__main__':
-    shuffler = Shuffler(2, 5)
+    pod_name = os.environ.get('POD_NAME')
+    pod_index_store = pod_name.rsplit('-', 1)[-1]
+    pod_index = int(pod_index_store)
+    pod_name = os.environ.get('POD_NAME')
+    pod_index_store = pod_name.rsplit('-', 1)[-1]
+    pod_index = int(pod_index_store)
+    shuffler = Shuffler()
     shuffler.print_groups()
     shuffler.filter_relevant_files()

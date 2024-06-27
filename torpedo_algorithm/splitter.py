@@ -1,5 +1,6 @@
 from collections import defaultdict
 import sys
+import re
 
 alphanumeric_re: str = r'[^a-zA-Z0-9\s]'
 
