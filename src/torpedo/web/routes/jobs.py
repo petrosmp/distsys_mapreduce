@@ -44,23 +44,13 @@ def submit_job(apps_api: AppsV1Api):
         job_id = str(uuid.uuid1())  # this should be stored somewhere
         master_name = f"master-{job_id}"
 
-        master_pod_spec = {
-            "serviceAccountName": "mr-manager-sa",
-            "containers": [
-                {
-                    "name": master_name,
-                    "image": "petemp/distsys-mapred-master:latest",
-                    "resources": {"limits": {"memory": "128Mi", "cpu": "500m"}},
-                }
-            ],
-        }
-
         master_deployment_manifest = {
             "apiVersion": "batch/v1",
             "kind": "Job",
             "metadata": {"name": master_name},
             "spec": {
                 "completions": 1,
+                "completionMode": "Indexed",
                 "template": {
                     "metadata": {"labels": {"app": master_name}},
                     "spec": {
