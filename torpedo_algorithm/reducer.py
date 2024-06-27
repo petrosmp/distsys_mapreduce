@@ -35,18 +35,9 @@ class Reducer:
 
 # Example usage
 if __name__ == "__main__":
-    reducer_id = '0'
-    reducer = Reducer(reducer_id)
-    reducer.run()
-    reducer_id = '1'
-    reducer = Reducer(reducer_id)
-    reducer.run()
-    reducer_id = '2'
-    reducer = Reducer(reducer_id)
-    reducer.run()
-    reducer_id = '3'
-    reducer = Reducer(reducer_id)
-    reducer.run()
-    reducer_id = '4'
-    reducer = Reducer(reducer_id)
+    pod_name = os.environ.get('POD_NAME')
+    pod_index_store = pod_name.rsplit('-', 1)[-1]
+    pod_index = int(pod_index_store)
+    reducer_id = pod_index
+    reducer = Reducer(str(reducer_id))
     reducer.run()
