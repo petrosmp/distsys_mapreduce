@@ -76,9 +76,11 @@ def submit_job(apps_api: AppsV1Api):
                                     {"name": "NUM_REDUCERS", "value": str(num_reducers)},
                                     {"name": "INPUT_FILE", "value": str(input_file)},
                                     {"name": "JOB_ID", "value": job_id},
-                                ]
+                                ],
+                                "volumeMounts": [{"mountPath": "/mnt/longhorn", "name": "longhorn-storage"}],
                             }
                         ],
+                        "volumes": [{"name": "longhorn-storage", "persistentVolumeClaim": {"claimName": "longhorn-pvc"}}],
                     }
                 },
                 "backoffLimit": 4  # Optional: Number of retries before marking the Job as failed
