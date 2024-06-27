@@ -2,6 +2,9 @@ import re
 import os
 
 
+job_id = os.environ.get('JOB_ID')
+
+
 class Mapper:
     def __init__(self, id: int):
         """
@@ -48,7 +51,7 @@ class Combiner:
         self.id = id
         self.mapped_data = mapped_data
         self.alphanumeric_appearances = alphanumeric_appearances
-        self.filename = f"/mnt/longhorn/mapper_out/mapper_{self.id}.txt"
+        self.filename = f"/mnt/longhorn/job_{job_id}/mapper_out/mapper_{self.id}.txt"
         self.combined = {}
 
     def combine(self) -> dict:
@@ -79,7 +82,8 @@ if __name__ == "__main__":
     pod_name = os.environ.get('POD_NAME')
     pod_index_store = pod_name.rsplit('-',1)[-1]
     pod_index = int(pod_index_store)
-    input_filename = f'/mnt/longhorn/split_out/split{pod_index}.txt'
+
+    input_filename = f'/mnt/longhorn/job_{job_id}/split_out/split{pod_index}.txt'
 
     #file to map given by coordinator
     with open(input_filename, 'r') as in_file:

@@ -6,9 +6,14 @@ metadata:
 spec:
   containers:
   - name: splitter
+    env:
+      - name: POD_NAME
+        value: pod-0
+      - name: JOB_ID
+        value: "23"  
     image: georgestav/splitter:latest
-    command: ["python", "splitter.py"] 
-    args: 
+    command: ["python", "splitter.py"]
+    args:
     - "/mnt/longhorn/input_file"
     - "3"
     volumeMounts:

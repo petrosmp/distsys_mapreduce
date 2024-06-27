@@ -72,11 +72,13 @@ class Shuffler:
         """
         # Find all files that contain words starting from letters in the group,
         # collect their data and send to reduce
+
+        job_id = os.environ.get('JOB_ID')
         for index, group in enumerate(self.groups):
             # Create letter group bit code, will probably be consecutive bits
             group_bitmask = create_bitmask(group)
             # TODO implement directory
-            files = list_map_files("/mnt/longhorn/mapper_out/")
+            files = list_map_files(f'/mnt/longhorn/job_{job_id}/mapper_out/')
             relevant_dicts = []
             for filename in files:
                 with open(filename, 'r') as f:
@@ -91,7 +93,7 @@ class Shuffler:
                         #self.process_dictionary(filtered_dict)
                         relevant_dicts.append(filtered_dict)
             # Write the relevant_dicts to a file with the group index in the filename
-            output_file = f'/mnt/longhorn/shuffler_out/shuffler_{index}.json'
+            output_file = f'/mnt/longhorn/job_{job_id}/shuffler_out/shuffler_{index}.json'
             with open(output_file, 'w') as f:
                 json.dump(relevant_dicts, f)
 
