@@ -55,8 +55,7 @@ def list_map_files(directory):
     return [os.path.join(directory, f) for f in os.listdir(directory) if f.startswith('mapper_') and f.endswith('.txt')]
 
 class Shuffler:
-    def __init__(self, id: int, num_of_reducers: int):
-        self.id: int = id
+    def __init__(self, num_of_reducers: int):
         self.num_of_reducers: int = num_of_reducers
         self.groups: list = self.divide_alphabet(self.num_of_reducers)
         self.reducer_data: dict
@@ -112,10 +111,10 @@ class Shuffler:
 
 
 if __name__ == '__main__':
-    pod_name = os.environ.get('POD_NAME')
-    pod_index_store = pod_name.rsplit('-', 1)[-1]
-    pod_index = int(pod_index_store)
+    # pod_name = os.environ.get('POD_NAME')
+    # pod_index_store = pod_name.rsplit('-', 1)[-1]
+    # pod_index = int(pod_index_store)
     num_reducers = int(os.environ.get('NUM_REDUCERS'))
-    shuffler = Shuffler(pod_index, num_reducers)
+    shuffler = Shuffler(num_reducers-1)
     shuffler.print_groups()
     shuffler.filter_relevant_files()
