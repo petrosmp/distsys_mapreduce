@@ -3,6 +3,8 @@ from kubernetes.client.rest import ApiException
 from kubernetes.client.models import V1Pod
 from time import sleep
 import os
+import job_state
+
 
 NAMESPACE = "torpili"
 INPUT_FILE = os.getenv("INPUT_FILE", "/mnt/longhorn/input_file")
@@ -11,8 +13,15 @@ NUM_SHUFFLERS = 1
 NUM_MAPPERS = int(os.getenv("NUM_MAPPERS", 3))
 NUM_REDUCERS = int(os.getenv("NUM_REDUCERS", 5))
 JOB_ID = os.getenv("NUM_REDUCERS")
+STATE_FILE_NAME = "STATE"
 
-def create_pods():
+
+def save_state(state):
+    with open(f"{job_dir}/{STATE_FILE_NAME}", 'w') as file:
+        file.write(state)
+
+
+def create_pods(state: int):
     config.load_incluster_config()
 
     core_api = client.CoreV1Api()
@@ -196,93 +205,107 @@ def create_pods():
 
     try:
 
-        # create splitters
-        try:
-            core_api.delete_namespaced_service(namespace=NAMESPACE, name="splitter-service")
-        except:
-            pass
-        core_api.create_namespaced_service(NAMESPACE, splitter_service_manifest)
-        apps_api.create_namespaced_stateful_set(NAMESPACE, splitter_statefulset_manifest)
+        
+        if state < job_state.SPLIT_PHASE_DONE:
 
-        splitters: list[V1Pod] = core_api.list_namespaced_pod(NAMESPACE, label_selector="app=splitter").items
+            # create splitters
+            try:
+                core_api.delete_namespaced_service(namespace=NAMESPACE, name="splitter-service")
+            except:
+                pass
+            core_api.create_namespaced_service(NAMESPACE, splitter_service_manifest)
+            apps_api.create_namespaced_stateful_set(NAMESPACE, splitter_statefulset_manifest)
 
-        # loop untill all splitters have completed
-        i = 0
-        while True:
-            while i < len(splitters):
-                if splitters[i].status.phase == "Completed":
-                    splitters.pop(i)
-                    i += 1
-                    break
-            break
-        sleep(15)
+            splitters: list[V1Pod] = core_api.list_namespaced_pod(NAMESPACE, label_selector="app=splitter").items
 
+            # loop untill all splitters have completed
+            i = 0
+            while True:
+                while i < len(splitters):
+                    if splitters[i].status.phase == "Completed":
+                        splitters.pop(i)
+                        i += 1
+                        break
+                break
+            sleep(15)
 
-        # TODO: could write to a file here (and after each stage) so that if the master is killed, the execution
-        # is picked up where it was left of
+            state = job_state.SPLIT_PHASE_DONE
+            save_state(state)
 
-        print(f"done splitting")
-
-        # create mappers
-        core_api.create_namespaced_service(NAMESPACE, mapper_service_manifest)
-        apps_api.create_namespaced_stateful_set(NAMESPACE, mapper_statefulset_manifest)
-
-        mappers: list[V1Pod] = core_api.list_namespaced_pod(NAMESPACE, label_selector="app=mapper").items
-
-        # loop untill all mappers have completed
-        i = 0
-        while True:
-            while i < len(mappers):
-                if mappers[i].status.phase == "Completed":
-                    mappers.pop(i)
-                    i += 1
-                    break
-            break
-        sleep(15)
-
-        print(f"done mapping")
+            print(f"done splitting")
 
 
-        # create shufflers
-        core_api.create_namespaced_service(NAMESPACE, shuffler_service_manifest)
-        apps_api.create_namespaced_stateful_set(NAMESPACE, shuffler_statefulset_manifest)
+        if state < job_state.MAP_PHASE_DONE:
 
-        shufflers: list[V1Pod] = core_api.list_namespaced_pod(NAMESPACE, label_selector="app=shuffler").items
+            # create mappers
+            core_api.create_namespaced_service(NAMESPACE, mapper_service_manifest)
+            apps_api.create_namespaced_stateful_set(NAMESPACE, mapper_statefulset_manifest)
 
-        # loop untill all shufflers have completed
-        i = 0
-        while True:
-            while i < len(shufflers):
-                if shufflers[i].status.phase == "Completed":
-                    shufflers.pop(i)
-                    i += 1
-                    break
-            break
-        sleep(15)
-        print(f"done shuffling")
+            mappers: list[V1Pod] = core_api.list_namespaced_pod(NAMESPACE, label_selector="app=mapper").items
 
+            # loop untill all mappers have completed
+            i = 0
+            while True:
+                while i < len(mappers):
+                    if mappers[i].status.phase == "Completed":
+                        mappers.pop(i)
+                        i += 1
+                        break
+                break
+            sleep(15)
 
-        # create reducers
-        core_api.create_namespaced_service(NAMESPACE, reducer_service_manifest)
-        apps_api.create_namespaced_stateful_set(NAMESPACE, reducer_statefulset_manifest)
+            state = job_state.MAP_PHASE_DONE
+            save_state(state)
 
-        reducers: list[V1Pod] = core_api.list_namespaced_pod(NAMESPACE, label_selector="app=reducer").items
+            print(f"done mapping")
 
-        # loop untill all reducers have completed
-        i = 0
-        while True:
-            while i < len(reducers):
-                if reducers[i].status.phase == "Completed":
-                    reducers.pop(i)
-                    i += 1
-                    break
-            break
-        sleep(15)
-        print(f"done reducing")
+        if state < job_state.SHUFFLE_PHASE_DONE:
+            # create shufflers
+            core_api.create_namespaced_service(NAMESPACE, shuffler_service_manifest)
+            apps_api.create_namespaced_stateful_set(NAMESPACE, shuffler_statefulset_manifest)
 
+            shufflers: list[V1Pod] = core_api.list_namespaced_pod(NAMESPACE, label_selector="app=shuffler").items
+
+            # loop untill all shufflers have completed
+            i = 0
+            while True:
+                while i < len(shufflers):
+                    if shufflers[i].status.phase == "Completed":
+                        shufflers.pop(i)
+                        i += 1
+                        break
+                break
+            sleep(15)
+
+            state = job_state.SHUFFLE_PHASE_DONE
+            save_state(state)
+            print(f"done shuffling")
+
+        if state < job_state.REDUCE_PHASE_DONE:
+            # create reducers
+            core_api.create_namespaced_service(NAMESPACE, reducer_service_manifest)
+            apps_api.create_namespaced_stateful_set(NAMESPACE, reducer_statefulset_manifest)
+
+            reducers: list[V1Pod] = core_api.list_namespaced_pod(NAMESPACE, label_selector="app=reducer").items
+
+            # loop untill all reducers have completed
+            i = 0
+            while True:
+                while i < len(reducers):
+                    if reducers[i].status.phase == "Completed":
+                        reducers.pop(i)
+                        i += 1
+                        break
+                break
+            sleep(15)
+            
+            state = job_state.REDUCE_PHASE_DONE
+            save_state(state)
+            print(f"done reducing")
 
         print("Split & Map & Shuffle & Reduce completed successfully")
 
+        # only delete things when everything is done
         apps_api.delete_namespaced_stateful_set(namespace=NAMESPACE, name="splitter")
         apps_api.delete_namespaced_stateful_set(namespace=NAMESPACE, name="mapper")
         apps_api.delete_namespaced_stateful_set(namespace=NAMESPACE, name="shuffler")
@@ -291,10 +314,29 @@ def create_pods():
         core_api.delete_namespaced_service(namespace=NAMESPACE, name="mapper-service")
         core_api.delete_namespaced_service(namespace=NAMESPACE, name="shuffler-service")
         core_api.delete_namespaced_service(namespace=NAMESPACE, name="reducer-service")
+
+        # we only reach here if everything that had to be run was run
+        state = job_state.FINISHED
+        save_state(state)
         print("deleted services & statefulsets successfully")
     except ApiException as e:
         print(f"Exception when creating pod: {e}")
 
-
 if __name__ == "__main__":
-    create_pods()
+
+    job_dir = f"/mnt/longhorn/{JOB_ID}"
+
+    if os.path.exists(job_dir):
+        try:
+            with open(f"{job_dir}/{STATE_FILE_NAME}", 'r') as file:
+                content = file.read()
+            state = int(content)
+        except FileNotFoundError:   # catch cases where crash happened before even saving state file
+            state = job_state.INITIALIZED
+    else:
+        os.makedirs(job_dir)
+        with open(f"{job_dir}/{STATE_FILE_NAME}", 'w') as file:
+            file.write(job_state.INITIALIZED)
+        state = job_state.INITIALIZED
+
+    create_pods(state)
