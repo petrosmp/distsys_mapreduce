@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: shuffler
+  namespace: torpili
+spec:
+  containers:
+  - name: shuffler
+    env:
+      - name: POD_NAME
+        value: pod-0
+      - name: JOB_ID
+        value: "23"  
+      - name: NUM_REDUCERS
+        value: "2"
+    image: georgestav/shuffler:latest
+    command: ["python", "shuffler.py"] 
+    volumeMounts:
+    - mountPath: "/mnt/longhorn"
+      name: longhorn-storage
+  volumes:
+  - name: longhorn-storage
+    persistentVolumeClaim:
+      claimName: longhorn-pvc
+  restartPolicy: OnFailure
