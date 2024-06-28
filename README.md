@@ -1,6 +1,8 @@
-Built with Python 3.12.4
+## A custom MapReduce implementation on a Kubernetes-managed cluster.
 
-A custom MapReduce implementation on a Kubernetes-managed cluster.
+This repository was created as the semester project of the INF-419 Principles of Distributed Software Systems course at the Technical University of Crete in June 2024.
+
+Read on for more information regarding repository structure, a presentation, a demonstration of the project in action & more.
 
   <figure>
       <img src="./cluster_architecture.svg" alt="Container on Image"   />
