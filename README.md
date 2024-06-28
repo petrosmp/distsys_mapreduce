@@ -19,7 +19,9 @@ A custom MapReduce implementation on a Kubernetes-managed cluster.
 | Docker | Containerization |
 | Flask | API Development |
 | PyJWT | Token-Based Authentication |
-| SQLAlchemy, psycopg, Alembic | ORM & DB Migrations |
+| SQLAlchemy| ORM |
+| psycopg | DB connection |
+| Alembic | DB Migrations |
 | PostgreSQL | Database Management |
 | HTML, JS, CSS | Web UI |
 
