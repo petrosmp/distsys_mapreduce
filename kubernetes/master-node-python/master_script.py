@@ -308,7 +308,6 @@ def create_pods(state: int):
             state = job_state.REDUCE_PHASE_ONGOING
             save_state(state)
 
-
         if state < job_state.REDUCE_PHASE_DONE:
             wait_for_job_completion(f"reducer-{JOB_ID}", NAMESPACE)
 
@@ -318,9 +317,11 @@ def create_pods(state: int):
         # we only reach here if everything that had to be run was run
         state = job_state.FINISHED
         save_state(state)
-        print("deleted services & statefulsets successfully")
+        print("master node job completed successfully")
+
+        # TODO: delete intermediate files (everything but reducer output)
     except ApiException as e:
-        print(f"Exception when creating pod: {e}")
+        print(f"Exception during master node proccess (state: {state}): {e}")
         exit(1)
 
 if __name__ == "__main__":
