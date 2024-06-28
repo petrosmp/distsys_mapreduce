@@ -16,8 +16,6 @@ class TorpedoModule(Module):  # type:ignore[misc]
     def configure(self, binder: Binder) -> None:
         binder.bind(Engine, to=self.engine, scope=flask_injector.singleton)  # type: ignore[attr-defined]
         binder.bind(Repository, to=self.repository, scope=flask_injector.singleton)  # type: ignore[attr-defined]
-        binder.bind(CoreV1Api, to=self.core_api, scope=flask_injector.singleton)  # type: ignore[attr-defined]
-        binder.bind(AppsV1Api, to=self.apps_api, scope=flask_injector.singleton)  # type: ignore[attr-defined]
         binder.bind(BatchV1Api, to=self.batch_api, scope=flask_injector.singleton)  # type: ignore[attr-defined]
 
     @inject
@@ -46,22 +44,6 @@ class TorpedoModule(Module):  # type:ignore[misc]
         Session = sessionmaker(bind=engine)  # noqa: N806
 
         return Repository(Session)
-
-    @inject
-    def core_api(self) -> CoreV1Api:
-        try:
-            config.load_incluster_config()
-        except Exception as e:
-            raise TorpedoException(f"error while loading kubernetes config: {e}", HTTPStatus.INTERNAL_SERVER_ERROR)
-        return CoreV1Api()
-
-    @inject
-    def apps_api(self) -> AppsV1Api:
-        try:
-            config.load_incluster_config()
-        except Exception as e:
-            raise TorpedoException(f"error while loading kubernetes config: {e}", HTTPStatus.INTERNAL_SERVER_ERROR)
-        return AppsV1Api()
 
     @inject
     def batch_api(self) -> BatchV1Api:
