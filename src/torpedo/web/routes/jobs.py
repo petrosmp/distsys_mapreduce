@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from flask import Blueprint, jsonify, request
 from injector import inject
-from kubernetes.client import AppsV1Api, BatchV1Api
+from kubernetes.client import BatchV1Api
 
 from src.torpedo.errors import TorpedoException
 from src.torpedo.models import Role
@@ -25,7 +25,7 @@ def list_jobs():
 @jobs.route("/submit_job", methods=["POST"])
 @requires_auth
 @inject
-def submit_job(apps_api: AppsV1Api):
+def submit_job(batch_api: BatchV1Api):
     """Submit a new job for execution on the cluster"""
 
     if not required_role_is_present(Role.SUBMIT_JOBS.value):
@@ -77,7 +77,6 @@ def submit_job(apps_api: AppsV1Api):
             }
         }
 
-        batch_api = BatchV1Api()
         batch_api.create_namespaced_job(NAMESPACE, master_deployment_manifest)
     except Exception as e:
         raise TorpedoException(f"error while creating master deployment: {e}", HTTPStatus.INTERNAL_SERVER_ERROR)

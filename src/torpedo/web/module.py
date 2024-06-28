@@ -3,7 +3,7 @@ from http import HTTPStatus
 
 import flask_injector
 from injector import Binder, Module, inject
-from kubernetes.client import AppsV1Api, CoreV1Api
+from kubernetes.client import AppsV1Api, CoreV1Api, BatchV1Api
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -18,6 +18,7 @@ class TorpedoModule(Module):  # type:ignore[misc]
         binder.bind(Repository, to=self.repository, scope=flask_injector.singleton)  # type: ignore[attr-defined]
         binder.bind(CoreV1Api, to=self.core_api, scope=flask_injector.singleton)  # type: ignore[attr-defined]
         binder.bind(AppsV1Api, to=self.apps_api, scope=flask_injector.singleton)  # type: ignore[attr-defined]
+        binder.bind(BatchV1Api, to=self.batch_api, scope=flask_injector.singleton)  # type: ignore[attr-defined]
 
     @inject
     def engine(self) -> Engine:
@@ -61,3 +62,11 @@ class TorpedoModule(Module):  # type:ignore[misc]
         except Exception as e:
             raise TorpedoException(f"error while loading kubernetes config: {e}", HTTPStatus.INTERNAL_SERVER_ERROR)
         return AppsV1Api()
+
+    @inject
+    def batch_api(self) -> BatchV1Api:
+        try:
+            config.load_incluster_config()
+        except Exception as e:
+            raise TorpedoException(f"error while loading kubernetes config: {e}", HTTPStatus.INTERNAL_SERVER_ERROR)
+        return BatchV1Api()
