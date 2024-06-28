@@ -4,32 +4,8 @@ metadata:
   namespace: torpili
   name: mr-manager-role
 rules:
-  - apiGroups: [""]  # indicates the core API group (see apiVersion)
-    resources: ["pods"]
-    verbs: ["get", "list", "create", "update", "patch", "watch", "delete", "deletecollection"]
-
-  - apiGroups: [""]
-    resources: ["services"]
-    verbs: ["get", "list", "create", "update", "patch", "watch", "delete", "deletecollection"]
-
-  - apiGroups: ["apps"]
-    resources: ["statefulsets"]
-    verbs: ["get", "list", "create", "update", "patch", "watch", "delete", "deletecollection"]
-
-  - apiGroups: ["apps"]  # indicates the apps API group
-    resources: ["deployments"]
-    verbs: ["get", "list", "create", "update", "patch", "watch", "delete", "deletecollection"]
-
   - apiGroups: ["batch"]
     resources: ["jobs"]
-    verbs: ["get", "list", "create", "update", "patch", "watch", "delete", "deletecollection"]
-
-  - apiGroups: [""]
-    resources: ["persistentvolumeclaims"]
-    verbs: ["get", "list", "create", "update", "patch", "watch", "delete", "deletecollection"]
-
-  - apiGroups: [""]
-    resources: ["persistentvolumes"]
     verbs: ["get", "list", "create", "update", "patch", "watch", "delete", "deletecollection"]
 
 # for request verbs, https://kubernetes.io/docs/reference/access-authn-authz/authorization/#request-verb-resource
