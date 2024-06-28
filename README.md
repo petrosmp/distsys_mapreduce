@@ -10,6 +10,9 @@ A custom MapReduce implementation on a Kubernetes-managed cluster.
 ### Presentation & Demo
 `<links here>`
 
+### Repository Structure
+- <a href="./flask-manager-service/"> **`/flask-manager-service`**</a> contains the implementation of the manager service, which is responsible for handling all user interaction and authentication and creating the master job*
+
 ### Dependencies:
 | **package / tool** | **purpose** |
 |:---:|:---:|
