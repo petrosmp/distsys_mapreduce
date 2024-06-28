@@ -10,7 +10,8 @@ Read on for more information regarding repository structure, a presentation, a d
   </figure>
 
 ### Presentation & Demo
-https://www.youtube.com/watch?v=zKNrN8a9in4
+Presentation: <a href="./presentation.pdf">**`presentation.pdf`**</a>
+Demo of the process recovering after a master node crash: <a href="https://www.youtube.com/watch?v=zKNrN8a9in4">**`youtube link`**</a>
 
 ### Repository Structure
 - <a href="./flask-manager-service/"> **`/flask-manager-service/`**</a> contains the implementation of the manager service, which is responsible for handling all user interaction and authentication and creating the master job
