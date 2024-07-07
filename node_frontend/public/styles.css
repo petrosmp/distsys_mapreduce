@@ -47,6 +47,63 @@ input {
     box-sizing: border-box;
 }
 
+#job-submission label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#job-submission input[type="number"],
+#job-submission input[type="file"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+#job-submission button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007BFF;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#job-submission button[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+.checkbox-container {
+    margin-bottom: 15px;
+}
+
+.checkbox-container label {
+    display: inline;
+    margin-left: 5px;
+}
+
+#job-submission input[type="checkbox"] {
+    display: inline;
+    width: auto;
+    margin-right: 5px;
+}
+
+#job-submission input[type="file"]:disabled {
+    background-color: #f2f2f2;
+    cursor: not-allowed;
+}
+
+#job-submission label.disabled {
+    color: #999;
+}
+
 .auth-view {
     display: none;
 }

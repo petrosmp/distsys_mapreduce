@@ -7,6 +7,67 @@ document.getElementById('login-button').addEventListener('click', async () => {
 document.getElementById('logout-button').addEventListener('click', async () => {
     await logout();
 });
+document.getElementById('use-default').addEventListener('change', function() {
+    const mapFileInput = document.getElementById('map-func-file');
+    const reduceFileInput = document.getElementById('reduce-func-file');
+    const mapFileLabel = document.querySelector('label[for="map-func-file"]');
+    const reduceFileLabel = document.querySelector('label[for="reduce-func-file"]');
+
+    if (this.checked) {
+        mapFileInput.disabled = true;
+        reduceFileInput.disabled = true;
+        mapFileInput.required = false;
+        reduceFileInput.required = false;
+        mapFileLabel.classList.add('disabled');
+        reduceFileLabel.classList.add('disabled');
+    } else {
+        mapFileInput.disabled = false;
+        reduceFileInput.disabled = false;
+        mapFileInput.required = true;
+        reduceFileInput.required = true;
+        mapFileLabel.classList.remove('disabled');
+        reduceFileLabel.classList.remove('disabled');
+    }
+});
+
+document.getElementById('job-form').addEventListener('submit', async (event) => {
+    event.preventDefault();
+
+    const formData = new FormData();
+    formData.append('num_mappers', document.getElementById('num-mappers').value);
+    formData.append('num_reducers', document.getElementById('num-reducers').value);
+
+    const useDefault = document.getElementById('use-default').checked;
+    formData.append('use_default', useDefault);
+
+    if (!useDefault) {
+        formData.append('map_func_file', document.getElementById('map-func-file').files[0]);
+        formData.append('reduce_func_file', document.getElementById('reduce-func-file').files[0]);
+    }
+
+    formData.append('input_file', document.getElementById('input-file').files[0]);
+
+    const token = localStorage.getItem('access_token');
+    try {
+        const response = await fetch('http://localhost:7777/jobs', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+            body: formData
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to submit job');
+        }
+
+        const data = await response.json();
+        alert('Job submitted successfully. Job ID: ' + data.job_id);
+    } catch (error) {
+        alert('Error submitting job: ' + error.message);
+    }
+});
 
 // Helper functions to show or hide a view
 function hideView(element) {
@@ -97,7 +158,7 @@ const login = async () => {
     if (response.status === 200) {
         alert('Welcome, ' + username);
         localStorage.setItem('access_token', data.token);
-        showWelcome();
+        showJobSubmission();
         updateWelcomeMessage(username);
     } else {
         // Display an error message if the login fails
@@ -151,4 +212,10 @@ const logout = async () => {
 const updateWelcomeMessage = (username) => {
     const welcomeElement = document.getElementById('welcome_username');
     welcomeElement.textContent = `Welcome, ${username}`;
+}
+
+
+function showJobSubmission() {
+    const jobSubmissionView = document.getElementById('job-submission');
+    showView(jobSubmissionView);
 }

@@ -28,6 +28,35 @@
         <button id="login-button">Login</button>
         <button id="back-button" onclick="showWelcome()">Back</button>
     </div>
+    <div id="job-submission" class="">
+        <h2>Submit MapReduce Job</h2>
+        <form id="job-form">
+            <label for="num-mappers">Number of Mappers:</label>
+            <input type="number" id="num-mappers" name="num_mappers" required>
+
+            <label for="num-reducers">Number of Reducers:</label>
+            <input type="number" id="num-reducers" name="num_reducers" required>
+
+            <div class="checkbox-container">
+                <label for="use-default">Use default mapper/reducer</label>
+                <input type="checkbox" id="use-default" name="use_default">
+
+            </div>
+
+            <div id="custom-files">
+                <label for="map-func-file">Map Function File (.py):</label>
+                <input type="file" id="map-func-file" name="map_func_file" accept=".py" required>
+
+                <label for="reduce-func-file">Reduce Function File (.py):</label>
+                <input type="file" id="reduce-func-file" name="reduce_func_file" accept=".py" required>
+            </div>
+
+            <label for="input-file">Input File:</label>
+            <input type="file" id="input-file" name="input_file" required>
+
+            <button type="submit">Submit Job</button>
+        </form>
+    </div>
 </div>
 <script src="loginPage.js"></script>
 </body>
